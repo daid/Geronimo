@@ -5,6 +5,7 @@
 #include <sp2/scene/particleEmitter.h>
 
 class Controls;
+class GrablingRope;
 class Spaceship : public sp::Node
 {
 public:
@@ -28,6 +29,7 @@ private:
     sp::Vector2d old_velocity;
     sp::P<sp::ParticleEmitter> engine_emitter;
     bool alive = true;
+    sp::P<GrablingRope> rope;
 };
 
 

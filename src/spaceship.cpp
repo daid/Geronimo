@@ -58,9 +58,15 @@ void Spaceship::onFixedUpdate()
         
         if (controls->secondary_action.getDown())
         {
-            GrablingRope* rope = new GrablingRope(this);
-            rope->setPosition(getPosition2D() + sp::Vector2d(0, -1).rotate(getRotation2D()));
-            LOG(Debug, rope);
+            if (!rope)
+            {
+                rope = new GrablingRope(this);
+                rope->setPosition(getPosition2D() + sp::Vector2d(0, -1).rotate(getRotation2D()));
+            }
+            else
+            {
+                rope.destroy();
+            }
         }
     }
     
