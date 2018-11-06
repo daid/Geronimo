@@ -21,6 +21,7 @@
 #include "controls.h"
 #include "spaceship.h"
 #include "levelScene.h"
+#include "levelSelect.h"
 
 sp::Vector2d gravity;
 
@@ -56,9 +57,8 @@ int main(int argc, char** argv)
 #endif
     window->addLayer(scene_layer);
 
-    sp::P<LevelScene> level_scene = new LevelScene();
-    level_scene->loadLevel("level3");
-
+    (new LevelScene())->disable();
+    new LevelSelect();
     engine->run();
     
     return 0;

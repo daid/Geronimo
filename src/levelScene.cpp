@@ -147,9 +147,21 @@ void LevelScene::onFixedUpdate()
     if (!alive || in_target)
     {
         if (end_level_countdown > 0)
+        {
             end_level_countdown--;
+        }
         else
-            loadLevel(level_name);
+        {
+            if (alive)
+            {
+                disable();
+                sp::Scene::get("LEVEL_SELECT")->enable();
+            }
+            else
+            {
+                loadLevel(level_name);
+            }
+        }
     }
     else
     {
