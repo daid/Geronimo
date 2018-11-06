@@ -31,6 +31,7 @@
 #include <json11/json11.hpp>
 
 #include "lineNodeBuilder.h"
+#include "physicsObject.h"
 #include "controls.h"
 #include "spaceship.h"
 
@@ -57,6 +58,7 @@ public:
                 delete obj;
             level_name = name;
             gravity = sp::Vector2d(0, -0.15);
+            target_areas.clear();
         }
         
         {
@@ -91,7 +93,7 @@ public:
                         int index = sp::stringutil::convert::toInt(object["name"].string_value());
                         sp::P<Spaceship> spaceship = new Spaceship(getRoot());
                         spaceship->setPosition(position);
-                        spaceship->controls = &controls[index];
+                        spaceship->setControls(&controls[index]);
                         spaceship->icon = addIcon(position, "gamepad" + sp::string(index + 1));
                         players.add(spaceship);
                     }
@@ -100,10 +102,17 @@ public:
                         float w = object["width"].number_value();
                         float h = -object["height"].number_value();
                         
-                        target_area.position.x = position.x;
-                        target_area.position.y = position.y + h / th;
-                        target_area.size.x = w / tw;
-                        target_area.size.y = -h / th;
+                        target_areas.emplace_back(position.x, position.y + h / th, w / tw, -h / th);
+                    }
+                    else if (object["type"] == "OBJECT")
+                    {
+                        sp::P<PhysicsObject> node = new PhysicsObject(getRoot(), object["name"].string_value());
+                        node->setPosition(position);
+                        target_objects.add(node);
+                    }
+                    else if (object["type"] != "")
+                    {
+                        LOG(Warning, "Unknown object type:", object["type"].string_value());
                     }
                 }
             }
@@ -145,7 +154,7 @@ public:
             if (player->isAlive())
             {
                 alive = true;
-                if (!target_area.contains(position) || (player->getLinearVelocity2D() - gravity).length() > 0.05)
+                if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - gravity).length() > 0.05)
                     in_target = false;
                 else
                     player->setIcon("checkmark");
@@ -155,6 +164,18 @@ public:
                 in_target = false;
             }
         }
+        
+        if (target_objects.size())
+        {
+            in_target = true;
+            for(auto target : target_objects)
+            {
+                sp::Vector2d position = target->getPosition2D();
+                if (!inTargetArea(position) || (target->getLinearVelocity2D() - gravity).length() > 0.05)
+                    in_target = false;
+            }
+        }
+        
         view_position /= double(players.size());
         view_position.x = std::min(camera_view_range.x, view_position.x);
         view_position.x = std::max(-camera_view_range.x, view_position.x);
@@ -175,13 +196,22 @@ public:
         }
     }
     
+    bool inTargetArea(sp::Vector2d position)
+    {
+        for(auto& target_area : target_areas)
+            if (target_area.contains(position))
+                return true;
+        return false;
+    }
+    
 private:
     sp::PList<Spaceship> players;
+    sp::PList<sp::Node> target_objects;
     sp::P<sp::Camera> camera;
     sp::Vector2d camera_view_range;
     int end_level_countdown;
     sp::string level_name;
-    sp::Rect2d target_area;
+    std::vector<sp::Rect2d> target_areas;
 };
 
 int main(int argc, char** argv)
@@ -212,7 +242,7 @@ int main(int argc, char** argv)
 
     sp::P<LevelScene> level_scene = new LevelScene();
     
-    level_scene->loadLevel("level1");
+    level_scene->loadLevel("level4");
     
     engine->run();
     

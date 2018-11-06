@@ -8,6 +8,8 @@ class Controls
 public:
     Controls(int index);
 
+    int index;
+    
     sp::io::Keybinding up;
     sp::io::Keybinding down;
     sp::io::Keybinding left;

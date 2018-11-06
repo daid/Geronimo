@@ -11,7 +11,6 @@ GrablingRope::GrablingRope(sp::P<sp::Node> owner)
     sp::collision::Circle2D shape(0.5);
     shape.type = sp::collision::Shape::Type::Sensor;
     setCollisionShape(shape);
-    setLinearVelocity(owner->getLinearVelocity2D());
     
     rope_joint = new sp::collision::RopeJoint2D(owner, sp::Vector2d(0, 0), this, sp::Vector2d(0, 0), 10.0);
 

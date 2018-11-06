@@ -18,6 +18,21 @@ Spaceship::Spaceship(sp::P<sp::Node> parent)
     engine_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
 }
 
+void Spaceship::setControls(Controls* controls)
+{
+    this->controls = controls;
+    if (controls)
+    {
+        switch(controls->index)
+        {
+        case 0: render_data.color = sp::Color(0.8, 0.8, 1); break;
+        case 1: render_data.color = sp::Color(1, 0.8, 0.8); break;
+        }
+    }
+    else
+        render_data.color = sp::Color(1, 1, 1);
+}
+
 void Spaceship::onFixedUpdate()
 {
     float turn_speed = 5;
@@ -62,6 +77,7 @@ void Spaceship::onFixedUpdate()
             {
                 rope = new GrablingRope(this);
                 rope->setPosition(getPosition2D() + sp::Vector2d(0, -1).rotate(getRotation2D()));
+                rope->setLinearVelocity(getLinearVelocity2D() + sp::Vector2d(0, -5).rotate(getRotation2D()));
             }
             else
             {
@@ -118,7 +134,7 @@ void Spaceship::onCollision(sp::CollisionInfo& info)
     if (info.force > 0.0)
     {
         sp::Vector2d local_hit_normal = info.normal.rotate(-getRotation2D());
-        if (local_hit_normal.y > -0.9)
+        if (local_hit_normal.y > -0.7)
         {
             LOG(Debug, this, "HIT", info.force, local_hit_normal);
             explode();

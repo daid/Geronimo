@@ -11,6 +11,8 @@ class Spaceship : public sp::Node
 public:
     Spaceship(sp::P<sp::Node> parent);
     
+    void setControls(Controls* controls);
+    
     virtual void onFixedUpdate() override;
     virtual void onUpdate(float delta) override;
     
@@ -23,8 +25,8 @@ public:
     void setIcon(sp::string name);
     
     sp::P<sp::Node> icon;
-    Controls* controls = nullptr;
 private:
+    Controls* controls = nullptr;
 
     sp::Vector2d old_velocity;
     sp::P<sp::ParticleEmitter> engine_emitter;

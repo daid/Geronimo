@@ -1,7 +1,8 @@
 #include "controls.h"
 
 Controls::Controls(int index)
-: up("up" + sp::string(index))
+: index(index)
+, up("up" + sp::string(index))
 , down("down" + sp::string(index))
 , left("left" + sp::string(index))
 , right("right" + sp::string(index))
