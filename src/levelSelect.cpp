@@ -82,15 +82,22 @@ LevelSelect::LevelSelect()
 : sp::Scene("LEVEL_SELECT")
 {
     sp::P<LevelNode> prev;
-    for(int n=0; n<4; n++)
+    for(int n=0; sp::io::ResourceProvider::get("level" + sp::string(n+1) + ".json") != nullptr; n++)
     {
-        sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1), sp::string(n));
+        sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1), sp::string(n + 1));
         next->setPosition(sp::Vector2d(n * 30, (n % 2) * -10));
         if (prev)
             new LevelNodeLink(prev, next);
         else
             selection = next;
         prev = next;
+        
+        if (sp::io::ResourceProvider::get("level" + sp::string(n+1) + "b.json") != nullptr)
+        {
+            sp::P<LevelNode> sub = new LevelNode(getRoot(), "level" + sp::string(n+1) + "b", sp::string(n + 1) + "b");
+            sub->setPosition(next->getPosition2D() + sp::Vector2d(10, -30));
+            new LevelNodeLink(next, sub);
+        }
     }
 
     camera = new sp::Camera(getRoot());
