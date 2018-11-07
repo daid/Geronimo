@@ -6,12 +6,17 @@
 
 #include <json11/json11.hpp>
 #include <sp2/graphics/textureManager.h>
+#include <sp2/graphics/gui/loader.h>
+
 
 LevelInfo level_info;
 
 LevelScene::LevelScene()
 : sp::Scene("LEVEL")
 {
+    gui = sp::gui::Loader::load("gui/hud.gui", "HUD");
+    gui->hide();
+    disable();
 }
 
 void LevelScene::loadLevel(sp::string name)
@@ -22,7 +27,21 @@ void LevelScene::loadLevel(sp::string name)
         level_name = name;
         level_info.gravity = sp::Vector2d(0, -0.15);
         level_info.fuel_ticks_used = 0;
+        level_info.time_ticks = 0;
+    
+        level_info.fuel_trophy = 6000;
+        level_info.time_trophy = 10 * 60 * 60;
         target_areas.clear();
+        
+        gui->show();
+        
+        FILE* f = fopen((name + ".trophy").c_str(), "rb");
+        if (f)
+        {
+            fread(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
+            fread(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+            fclose(f);
+        }
     }
     
     {
@@ -108,6 +127,8 @@ sp::P<sp::Node> LevelScene::addIcon(sp::Vector2d position, sp::string name)
 
 void LevelScene::onFixedUpdate()
 {
+    level_info.time_ticks += 1;
+
     sp::Vector2d view_position;
     bool alive = false;
     bool in_target = true;
@@ -157,8 +178,26 @@ void LevelScene::onFixedUpdate()
         {
             if (alive)
             {
-                disable();
-                sp::Scene::get("LEVEL_SELECT")->enable();
+                bool store_result = false;
+                if (level_info.fuel_ticks_used < level_info.fuel_trophy)
+                {
+                    level_info.fuel_trophy = level_info.fuel_ticks_used;
+                    store_result = true;
+                }
+                if (level_info.time_ticks < level_info.time_trophy)
+                {
+                    level_info.time_trophy = level_info.time_ticks;
+                    store_result = true;
+                }
+                if (store_result)
+                {
+                    FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
+                    fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
+                    fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+                    fclose(f);
+                }
+            
+                exitLevel();
             }
             else
             {
@@ -173,9 +212,20 @@ void LevelScene::onFixedUpdate()
 
     if (controls[0].start.getDown())
     {
-        disable();
-        sp::Scene::get("LEVEL_SELECT")->enable();
+        exitLevel();
     }
+}
+
+void LevelScene::onUpdate(float delta)
+{
+    float fuel = float(level_info.fuel_ticks_used) / float(level_info.fuel_trophy);
+    float time = float(level_info.time_ticks) / float(level_info.time_trophy);
+    gui->getWidgetWithID("FUEL")->getWidgetWithID("BAR")->setAttribute("value", sp::string(fuel / 2.0, 5));
+    gui->getWidgetWithID("FUEL")->getWidgetWithID("TROPHY")->setVisible(fuel <= 1.0);
+    gui->getWidgetWithID("FUEL")->getWidgetWithID("FAILED")->setVisible(fuel > 1.0);
+    gui->getWidgetWithID("TIME")->getWidgetWithID("BAR")->setAttribute("value", sp::string(time / 2.0, 5));
+    gui->getWidgetWithID("TIME")->getWidgetWithID("TROPHY")->setVisible(time <= 1.0);
+    gui->getWidgetWithID("TIME")->getWidgetWithID("FAILED")->setVisible(time > 1.0);
 }
 
 bool LevelScene::inTargetArea(sp::Vector2d position)
@@ -184,4 +234,11 @@ bool LevelScene::inTargetArea(sp::Vector2d position)
         if (target_area.contains(position))
             return true;
     return false;
+}
+
+void LevelScene::exitLevel()
+{
+    disable();
+    gui->hide();
+    sp::Scene::get("LEVEL_SELECT")->enable();
 }

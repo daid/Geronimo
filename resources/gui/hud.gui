@@ -1,0 +1,48 @@
+[HUD] {
+    stretch: true
+    layout: horizontal
+
+    [FUEL] {
+        @ref: RECORD_BAR type=fuel
+    }
+    [TIME] {
+        @ref: RECORD_BAR type=time
+    }
+}
+
+[@RECORD_BAR] {
+    width: 15
+    fill_height: true
+    [BAR] {
+        type: progressbar
+        stretch: true
+        margin: 5, 0, 10, 10
+        progress.alignment: top
+        
+        value: 1
+
+        [TROPHY] {
+            type: image
+            texture: gui/icons/trophy.png
+            size: 15, 15
+            order: 10
+            alignment: center
+        }
+        [FAILED] {
+            type: image
+            texture: gui/icons/cross.png
+            size: 15, 15
+            order: 10
+            alignment: center
+            visible: false
+        }
+        {
+            type: image
+            texture: gui/icons/{type}.png
+            size: 15, 15
+            margin: -7.5
+            order: 10
+            alignment: top
+        }
+    }
+}
