@@ -167,6 +167,12 @@ void LevelScene::onFixedUpdate()
     {
         end_level_countdown = 60 * 2;
     }
+
+    if (controls[0].start.getDown())
+    {
+        disable();
+        sp::Scene::get("LEVEL_SELECT")->enable();
+    }
 }
 
 bool LevelScene::inTargetArea(sp::Vector2d position)

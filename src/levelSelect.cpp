@@ -95,7 +95,7 @@ void LevelSelect::onFixedUpdate()
         if (controls[n].up.getDown() && selection->up) selection = selection->up;
         if (controls[n].down.getDown() && selection->down) selection = selection->down;
 
-        if (controls[n].secondary_action.getDown() || controls[n].start.getDown())
+        if (controls[n].secondary_action.getDown())
         {
             sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
             level_scene->loadLevel(selection->level_name);
