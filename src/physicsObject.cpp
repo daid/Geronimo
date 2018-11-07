@@ -1,6 +1,6 @@
 #include "physicsObject.h"
 
-#include "main.h"
+#include "levelScene.h"
 #include "lineNodeBuilder.h"
 
 
@@ -15,6 +15,6 @@ PhysicsObject::PhysicsObject(sp::P<sp::Node> parent, sp::string name)
 void PhysicsObject::onFixedUpdate()
 {
     sp::Vector2d velocity = getLinearVelocity2D();
-    velocity += gravity;
+    velocity += level_info.gravity;
     setLinearVelocity(velocity);
 }

@@ -1,5 +1,5 @@
 #include "grablingRope.h"
-#include "main.h"
+#include "levelScene.h"
 #include <sp2/collision/2d/circle.h>
 #include <sp2/graphics/meshdata.h>
 #include <sp2/graphics/textureManager.h>
@@ -55,7 +55,7 @@ void GrablingRope::onFixedUpdate()
     }
     sp::Vector2d velocity = getLinearVelocity2D();
     velocity *= 0.99;
-    velocity += gravity;
+    velocity += level_info.gravity;
     setLinearVelocity(velocity);
 }
 

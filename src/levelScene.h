@@ -29,4 +29,13 @@ private:
     std::vector<sp::Rect2d> target_areas;
 };
 
+class LevelInfo
+{
+public:
+    sp::Vector2d gravity;
+    int fuel_ticks_used;
+};
+
+extern LevelInfo level_info;
+
 #endif//LEVEL_SCENE_H

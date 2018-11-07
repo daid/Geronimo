@@ -1,10 +1,11 @@
 #include "spaceship.h"
 #include "lineNodeBuilder.h"
 #include "controls.h"
-#include "main.h"
+#include "levelScene.h"
 #include "grablingRope.h"
 
 #include <sp2/random.h>
+#include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
 
 
@@ -40,7 +41,7 @@ void Spaceship::onFixedUpdate()
 
     double angular_velocity = getAngularVelocity2D() * 0.95;
     sp::Vector2d velocity = getLinearVelocity2D();
-    velocity += gravity;
+    velocity += level_info.gravity;
 
     if (controls && alive)
     {
@@ -69,6 +70,8 @@ void Spaceship::onFixedUpdate()
             parameters.end_size = 4.0;
             parameters.lifetime = 0.3;
             engine_emitter->emit(parameters);
+
+            level_info.fuel_ticks_used += 1;
         }
         
         if (controls->secondary_action.getDown())
@@ -144,7 +147,7 @@ void Spaceship::onCollision(sp::CollisionInfo& info)
 
 void Spaceship::explode()
 {
-    sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(getParent(), 16, sp::ParticleEmitter::Origin::Local);
+    sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(getParent(), 64, sp::ParticleEmitter::Origin::Local);
     pe->setPosition(getPosition2D());
     pe->auto_destroy = true;
     for(int n=0; n<64; n++)
@@ -155,13 +158,11 @@ void Spaceship::explode()
         parameters.velocity.y = velocity.y;
         parameters.acceleration = parameters.velocity;
         parameters.acceleration.y += -100.0;
-        parameters.start_color = render_data.color;
-        parameters.end_color = parameters.start_color;
         parameters.end_color.a = 0;
 
-        parameters.start_size = 4.0;
+        parameters.start_size = 5.0;
         parameters.end_size = 10.0;
-        parameters.lifetime = sp::random(0.1, 0.3);
+        parameters.lifetime = sp::Tween<double>::easeInCubic(sp::random(0.0, 1.0), 0.0, 1.0, 0.3, 3.0);
         pe->emit(parameters);
     }
     engine_emitter->setParent(getParent());

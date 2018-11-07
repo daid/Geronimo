@@ -7,6 +7,8 @@
 #include <json11/json11.hpp>
 #include <sp2/graphics/textureManager.h>
 
+LevelInfo level_info;
+
 LevelScene::LevelScene()
 : sp::Scene("LEVEL")
 {
@@ -18,7 +20,8 @@ void LevelScene::loadLevel(sp::string name)
         for(auto obj : getRoot()->getChildren())
             delete obj;
         level_name = name;
-        gravity = sp::Vector2d(0, -0.15);
+        level_info.gravity = sp::Vector2d(0, -0.15);
+        level_info.fuel_ticks_used = 0;
         target_areas.clear();
     }
     
@@ -115,7 +118,7 @@ void LevelScene::onFixedUpdate()
         if (player->isAlive())
         {
             alive = true;
-            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - gravity).length() > 0.05)
+            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - level_info.gravity).length() > 0.05)
                 in_target = false;
             else
                 player->setIcon("checkmark");
@@ -132,7 +135,7 @@ void LevelScene::onFixedUpdate()
         for(auto target : target_objects)
         {
             sp::Vector2d position = target->getPosition2D();
-            if (!inTargetArea(position) || (target->getLinearVelocity2D() - gravity).length() > 0.05)
+            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.gravity).length() > 0.05)
                 in_target = false;
         }
     }
