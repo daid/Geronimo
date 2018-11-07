@@ -1,0 +1,5 @@
+{
+    color: #FFFFFF
+    font: gui/theme/KenVector Bold.ttf
+    size: 30
+}

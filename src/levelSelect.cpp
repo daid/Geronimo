@@ -6,18 +6,30 @@
 #include <sp2/scene/camera.h>
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
+#include <sp2/graphics/fontManager.h>
 
 
 class LevelNode : public sp::Node
 {
 public:
-    LevelNode(sp::P<sp::Node> parent, sp::string level_name)
+    LevelNode(sp::P<sp::Node> parent, sp::string level_name, sp::string label)
     : sp::Node(parent), level_name(level_name)
     {
         LineNodeBuilder builder;
         builder.addLoop({{-5, -5}, {5,-5}, {5,5}, {-5,5}});
         builder.create(this, LineNodeBuilder::CollisionType::None);
         render_data.color = sp::Color(0.8, 1.0, 0.8);
+        
+        if (label != "")
+        {
+            sp::P<sp::Node> node = new sp::Node(this);
+            node->render_data.type = sp::RenderData::Type::Additive;
+            node->render_data.shader = sp::Shader::get("internal:basic.shader");
+            node->render_data.mesh = sp::font_manager.get("gui/theme/KenVector Bold.ttf")->createString(label, 32, 5.0f, sp::Vector2d(0, 0), sp::Alignment::Bottom);
+            node->render_data.texture = sp::font_manager.get("gui/theme/KenVector Bold.ttf")->getTexture(32);
+            node->render_data.color = sp::Color(0.8, 1.0, 0.8);
+            node->setPosition(sp::Vector2d(0, -3.0));
+        }
     }
     
     sp::string level_name;
@@ -72,7 +84,7 @@ LevelSelect::LevelSelect()
     sp::P<LevelNode> prev;
     for(int n=0; n<4; n++)
     {
-        sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1));
+        sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1), sp::string(n));
         next->setPosition(sp::Vector2d(n * 30, (n % 2) * -10));
         if (prev)
             new LevelNodeLink(prev, next);
