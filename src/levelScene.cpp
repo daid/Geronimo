@@ -51,14 +51,14 @@ void LevelScene::loadLevel(sp::string name)
     
     {
         LineNodeBuilder builder;
-        builder.loadFrom(name + ".json", 2.0);
+        builder.loadFrom("levels/" + name + ".json", 2.0);
         sp::P<sp::Node> node = new sp::Node(getRoot());
         builder.create(node, LineNodeBuilder::CollisionType::Chains);
         node->render_data.color = sp::Color(0.8, 1.0, 0.8);
     }
     {
         std::string err;
-        json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get(name + ".json")->readAll(), err);
+        json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get("levels/" + name + ".json")->readAll(), err);
         
         float tw = json["tilewidth"].number_value();
         float th = json["tileheight"].number_value();
