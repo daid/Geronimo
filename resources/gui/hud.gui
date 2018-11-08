@@ -1,12 +1,22 @@
 [HUD] {
     stretch: true
-    layout: horizontal
+    {
+        layout: horizontal
+        stretch: true
 
-    [FUEL] {
-        @ref: RECORD_BAR type=fuel
+        [FUEL] {
+            @ref: RECORD_BAR type=fuel
+        }
+        [TIME] {
+            @ref: RECORD_BAR type=time
+        }
     }
-    [TIME] {
-        @ref: RECORD_BAR type=time
+    [BIG_ASS_TROPHY] {
+        type: image
+        texture: gui/icons/trophy.png
+        size: 100, 100
+        alignment: center
+        visible: false
     }
 }
 

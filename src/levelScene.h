@@ -29,6 +29,7 @@ private:
     sp::P<sp::Camera> camera;
     sp::Vector2d camera_view_range;
     int end_level_countdown;
+    bool level_already_finished;
     sp::string level_name;
     std::vector<sp::Rect2d> target_areas;
     
