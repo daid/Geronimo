@@ -1,0 +1,34 @@
+[HUD] {
+    stretch: true
+    {
+        alignment: top
+        margin: 40
+        layout: horizontal
+        match_content_size: true
+
+        [FUEL] {
+            @ref: TROPHY type=fuel
+            size: 60, 45
+        }
+        [TIME] {
+            @ref: TROPHY type=time
+            size: 60, 45
+        }
+    }
+}
+
+[@TROPHY] {
+    {
+        type: image
+        texture: gui/icons/{type}.png
+        size: 15, 15
+        order: 10
+        alignment: topleft
+    }
+    [PHOTO] {
+        type: image
+        texture: level1.trophy.fuel.png
+        size: 60, 45
+        position: 0, -45
+    }
+}

@@ -37,6 +37,7 @@ int main(int argc, char** argv)
 
     //Create resource providers, so we can load things.
     new sp::io::DirectoryResourceProvider("resources");
+    new sp::io::DirectoryResourceProvider("photos");
 
     sp::texture_manager.setDefaultSmoothFiltering(false);
 

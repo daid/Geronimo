@@ -9,6 +9,7 @@
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
 #include <sp2/graphics/gui/loader.h>
+#include <sp2/io/cameraCapture.h>
 
 
 LevelInfo level_info;
@@ -197,56 +198,7 @@ void LevelScene::onFixedUpdate()
                 if (alive)
                 {
                     level_already_finished = true;
-                    bool store_result = false;
-                    if (level_info.fuel_ticks_used < level_info.fuel_trophy)
-                    {
-                        level_info.fuel_trophy = level_info.fuel_ticks_used;
-                        store_result = true;
-                    }
-                    if (level_info.time_ticks < level_info.time_trophy)
-                    {
-                        level_info.time_trophy = level_info.time_ticks;
-                        store_result = true;
-                    }
-                    
-                    if (store_result)
-                    {
-                        FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
-                        fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
-                        fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
-                        fclose(f);
-                        end_level_countdown = 60 * 3;
-                        
-                        gui->getWidgetWithID("BIG_ASS_TROPHY")->show();
-                        
-                        for(int n=0; n<10; n++) //Create fireworks!
-                        {
-                            sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(camera, 64, sp::ParticleEmitter::Origin::Local);
-                            pe->setPosition(sp::Vector2d(sp::random(-60, 60), sp::random(-60, 60)));
-                            pe->auto_destroy = true;
-                            for(int n=0; n<64; n++)
-                            {
-                                sp::Vector2f velocity = sp::Vector2f(sp::random(1, 40), 0).rotate(sp::random(0, 360));
-                                sp::ParticleEmitter::Parameters parameters;
-                                parameters.velocity.x = velocity.x;
-                                parameters.velocity.y = velocity.y;
-                                parameters.acceleration = parameters.velocity;
-                                parameters.acceleration.y += -100.0;
-                                parameters.start_color = sp::HsvColor(sp::random(0, 360), 20, 100);
-                                parameters.end_color = parameters.start_color;
-                                parameters.end_color.a = 0;
-
-                                parameters.start_size = 5.0;
-                                parameters.end_size = 10.0;
-                                parameters.lifetime = sp::Tween<double>::easeInCubic(sp::random(0.0, 1.0), 0.0, 1.0, 0.3, 3.0);
-                                pe->emit(parameters);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        exitLevel();
-                    }
+                    levelFinished();
                 }
                 else
                 {
@@ -287,6 +239,81 @@ bool LevelScene::inTargetArea(sp::Vector2d position)
         if (target_area.contains(position))
             return true;
     return false;
+}
+
+void LevelScene::levelFinished()
+{
+    int trophy = 0;
+    if (level_info.fuel_ticks_used < level_info.fuel_trophy)
+    {
+        level_info.fuel_trophy = level_info.fuel_ticks_used;
+        trophy |= 1;
+    }
+    if (level_info.time_ticks < level_info.time_trophy)
+    {
+        level_info.time_trophy = level_info.time_ticks;
+        trophy |= 2;
+    }
+    
+    if (trophy)
+    {
+        end_level_countdown = 60 * 3;
+        earnTrophy(trophy);
+    }
+    else
+    {
+        exitLevel();
+    }
+}
+
+void LevelScene::earnTrophy(int type_bits)
+{
+    sp::io::CameraCapture camera_capture(0);
+    if (camera_capture.isOpen())
+    {
+        sp::Image photo = camera_capture.getFrame();
+        if (type_bits & 1)
+        {
+            photo.saveToFile("photos/" + level_name + ".trophy.fuel.png");
+            sp::texture_manager.forceRefresh(level_name + ".trophy.fuel.png");
+        }
+        if (type_bits & 2)
+        {
+            photo.saveToFile("photos/" + level_name + ".trophy.time.png");
+            sp::texture_manager.forceRefresh(level_name + ".trophy.time.png");
+        }
+    }
+
+    FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
+    fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
+    fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+    fclose(f);
+    
+    gui->getWidgetWithID("BIG_ASS_TROPHY")->show();
+    
+    for(int n=0; n<10; n++) //Create fireworks!
+    {
+        sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(camera, 64, sp::ParticleEmitter::Origin::Local);
+        pe->setPosition(sp::Vector2d(sp::random(-60, 60), sp::random(-60, 60)));
+        pe->auto_destroy = true;
+        for(int n=0; n<64; n++)
+        {
+            sp::Vector2f velocity = sp::Vector2f(sp::random(1, 40), 0).rotate(sp::random(0, 360));
+            sp::ParticleEmitter::Parameters parameters;
+            parameters.velocity.x = velocity.x;
+            parameters.velocity.y = velocity.y;
+            parameters.acceleration = parameters.velocity;
+            parameters.acceleration.y += -100.0;
+            parameters.start_color = sp::HsvColor(sp::random(0, 360), 20, 100);
+            parameters.end_color = parameters.start_color;
+            parameters.end_color.a = 0;
+
+            parameters.start_size = 5.0;
+            parameters.end_size = 10.0;
+            parameters.lifetime = sp::Tween<double>::easeInCubic(sp::random(0.0, 1.0), 0.0, 1.0, 0.3, 3.0);
+            pe->emit(parameters);
+        }
+    }
 }
 
 void LevelScene::exitLevel()

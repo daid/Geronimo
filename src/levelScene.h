@@ -22,6 +22,8 @@ public:
     
     bool inTargetArea(sp::Vector2d position);
 private:
+    void levelFinished();
+    void earnTrophy(int type_bits);
     void exitLevel();
 
     sp::PList<Spaceship> players;

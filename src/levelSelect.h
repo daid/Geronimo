@@ -2,6 +2,7 @@
 #define LEVEL_SELECT_H
 
 #include <sp2/scene/scene.h>
+#include <sp2/graphics/gui/widget/widget.h>
 
 
 class LevelNode;
@@ -12,7 +13,9 @@ public:
     
     virtual void onFixedUpdate() override;
 
+    void updateTrophys();
 private:
+    sp::P<sp::gui::Widget> gui;
     sp::P<sp::Camera> camera;
     sp::P<LevelNode> selection;
 };

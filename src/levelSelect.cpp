@@ -7,6 +7,7 @@
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
 #include <sp2/graphics/fontManager.h>
+#include <sp2/graphics/gui/loader.h>
 
 
 class LevelNode : public sp::Node
@@ -100,13 +101,20 @@ LevelSelect::LevelSelect()
         }
     }
 
+    gui = sp::gui::Loader::load("gui/level_select_hud.gui", "HUD");
+    gui->getWidgetWithID("FUEL")->getWidgetWithID("PHOTO")->setRotation(-90);
+    gui->getWidgetWithID("TIME")->getWidgetWithID("PHOTO")->setRotation(-90);
+
     camera = new sp::Camera(getRoot());
     camera->setOrtographic(60);
     setDefaultCamera(camera);
+    
+    updateTrophys();
 }
 
 void LevelSelect::onFixedUpdate()
 {
+    sp::P<sp::Node> old_selection = selection;
     for(int n=0; n<2; n++)
     {
         if (controls[n].right.getDown() && selection->right) selection = selection->right;
@@ -119,8 +127,23 @@ void LevelSelect::onFixedUpdate()
             sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
             level_scene->loadLevel(selection->level_name);
             level_scene->enable();
+            gui->hide();
             disable();
         }
     }
+    if (old_selection != selection)
+    {
+        updateTrophys();
+    }
+    
     camera->setPosition(camera->getPosition2D() * 0.8 + selection->getPosition2D() * 0.2);
+}
+
+void LevelSelect::updateTrophys()
+{
+    gui->show();
+    gui->getWidgetWithID("FUEL")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.fuel.png") != nullptr);
+    gui->getWidgetWithID("FUEL")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.fuel.png");
+    gui->getWidgetWithID("TIME")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.time.png") != nullptr);
+    gui->getWidgetWithID("TIME")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.time.png");
 }
