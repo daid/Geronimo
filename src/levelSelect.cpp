@@ -109,6 +109,14 @@ LevelSelect::LevelSelect()
     camera->setOrtographic(60);
     setDefaultCamera(camera);
     
+    {
+        sp::P<sp::Node> node = new sp::Node(camera);
+        LineNodeBuilder builder;
+        builder.addLoop({{-6, -6}, {6,-6}, {6,6}, {-6,6}});
+        builder.create(node, LineNodeBuilder::CollisionType::None);
+        node->render_data.color = sp::Color(0.8, 1.0, 0.8);
+    }
+    
     updateTrophys();
 }
 
