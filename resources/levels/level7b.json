@@ -268,18 +268,6 @@
                  "width":0,
                  "x":2192,
                  "y":1040
-                }, 
-                {
-                 "height":0,
-                 "id":70,
-                 "name":"box-small",
-                 "point":true,
-                 "rotation":0,
-                 "type":"OBJECT",
-                 "visible":true,
-                 "width":0,
-                 "x":1600,
-                 "y":1584
                 }],
          "opacity":1,
          "type":"objectgroup",
