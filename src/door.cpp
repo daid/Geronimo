@@ -8,7 +8,6 @@ Door::Door(sp::P<sp::Node> parent, sp::string trigger)
 
 void Door::onTrigger()
 {
-    LOG(Debug, this, "trigger", opened_position);
     target_position = opened_position;
 }
 
