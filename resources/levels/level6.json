@@ -110,18 +110,6 @@
                  "width":0,
                  "x":529.090909090909,
                  "y":779.757575757576
-                }, 
-                {
-                 "height":0,
-                 "id":64,
-                 "name":"ball-small",
-                 "point":true,
-                 "rotation":0,
-                 "type":"OBJECT",
-                 "visible":true,
-                 "width":0,
-                 "x":1354.54545454545,
-                 "y":790.909090909091
                 }],
          "opacity":1,
          "type":"objectgroup",
