@@ -2,10 +2,9 @@
 
 #include <sp2/assert.h>
 #include <sp2/graphics/textureManager.h>
-#include <json11/json11.hpp>
 
 
-void LineNodeBuilder::loadFrom(sp::string filename, float line_width)
+void LineNodeBuilder::loadFrom(sp::string filename, float line_width, sp::string type)
 {
     std::string err;
     json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get(filename)->readAll(), err);
@@ -18,6 +17,8 @@ void LineNodeBuilder::loadFrom(sp::string filename, float line_width)
     {
         for(const auto& object : layer["objects"].array_items())
         {
+            if (sp::string(object["type"].string_value()) != type)
+                continue;
             float x = object["x"].number_value();
             float y = -object["y"].number_value();
             std::vector<sp::Vector2f> points;
@@ -27,6 +28,21 @@ void LineNodeBuilder::loadFrom(sp::string filename, float line_width)
                 addLoop(points, line_width);
         }
     }
+}
+
+void LineNodeBuilder::addLoop(const json11::Json& base_json, const json11::Json& object_json, float line_width)
+{
+    float tw = base_json["tilewidth"].number_value();
+    float th = base_json["tileheight"].number_value();
+    float offset_x = base_json["width"].number_value() / 2.0;
+    float offset_y = base_json["height"].number_value() / 2.0;
+    float x = object_json["x"].number_value();
+    float y = -object_json["y"].number_value();
+    std::vector<sp::Vector2f> points;
+    for(const auto& point : object_json["polygon"].array_items())
+        points.emplace_back((x + point["x"].number_value()) / tw - offset_x, (y-point["y"].number_value()) / th + offset_y);
+    if (points.size() > 0)
+        addLoop(points, line_width);
 }
 
 void LineNodeBuilder::addLoop(const std::vector<sp::Vector2f>& points, float line_width)

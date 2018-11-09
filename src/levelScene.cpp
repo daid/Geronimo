@@ -2,7 +2,9 @@
 #include "main.h"
 #include "lineNodeBuilder.h"
 #include "spaceship.h"
+#include "door.h"
 #include "physicsObject.h"
+#include "trigger.h"
 
 #include <json11/json11.hpp>
 #include <sp2/random.h>
@@ -97,7 +99,44 @@ void LevelScene::loadLevel(sp::string name)
                 {
                     sp::P<PhysicsObject> node = new PhysicsObject(getRoot(), object["name"].string_value());
                     node->setPosition(position);
-                    target_objects.add(node);
+                    
+                    for(const auto& prop : object["properties"].array_items())
+                    {
+                        if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
+                            target_objects.add(node);
+                        else
+                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
+                    }
+                }
+                else if (object["type"] == "DOOR")
+                {
+                    sp::P<Door> door = new Door(getRoot(), object["name"].string_value());
+                    LineNodeBuilder builder;
+                    builder.addLoop(json, object, 2.0);
+                    builder.create(door, LineNodeBuilder::CollisionType::Chains);
+                    //node->render_data.color = sp::Color(0.8, 1.0, 0.8);
+
+                    for(const auto& prop : object["properties"].array_items())
+                    {
+                        if (prop["name"] == "offset")
+                            door->opened_position = sp::stringutil::convert::toVector2d(prop["value"].string_value());
+                        else
+                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
+                    }
+                }
+                else if (object["type"] == "TRIGGER")
+                {
+                    float w = object["width"].number_value();
+                    float h = -object["height"].number_value();
+                    
+                    sp::string target = object["name"].string_value();
+                    sp::string source = "";
+                    if (target.find(":") > -1)
+                    {
+                        source = target.substr(0, target.find(":"));
+                        target = target.substr(target.find(":") + 1);
+                    }
+                    new Trigger(getRoot(), sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
                 }
                 else if (object["type"] != "")
                 {
@@ -162,7 +201,7 @@ void LevelScene::onFixedUpdate()
         for(auto target : target_objects)
         {
             sp::Vector2d position = target->getPosition2D();
-            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.gravity).length() > 0.05)
+            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.gravity).length() > 0.5)
                 in_target = false;
         }
     }
