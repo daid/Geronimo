@@ -3,6 +3,7 @@
 #include "lineNodeBuilder.h"
 #include "spaceship.h"
 #include "door.h"
+#include "laser.h"
 #include "physicsObject.h"
 #include "trigger.h"
 
@@ -120,6 +121,18 @@ void LevelScene::loadLevel(sp::string name)
                     {
                         if (prop["name"] == "offset")
                             door->opened_position = sp::stringutil::convert::toVector2d(prop["value"].string_value());
+                        else
+                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
+                    }
+                }
+                else if (object["type"] == "LASER")
+                {
+                    sp::P<Laser> laser = new Laser(getRoot(), object["name"].string_value());
+                    laser->setPosition(position);
+                    for(const auto& prop : object["properties"].array_items())
+                    {
+                        if (prop["name"] == "angle")
+                            laser->setAngle(sp::stringutil::convert::toFloat(prop["value"].string_value()));
                         else
                             LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
                     }

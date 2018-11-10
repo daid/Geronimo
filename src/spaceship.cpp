@@ -147,6 +147,8 @@ void Spaceship::onCollision(sp::CollisionInfo& info)
 
 void Spaceship::explode()
 {
+    if (!alive)
+        return;
     sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(getParent(), 64, sp::ParticleEmitter::Origin::Local);
     pe->setPosition(getPosition2D());
     pe->auto_destroy = true;
