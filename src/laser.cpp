@@ -49,6 +49,8 @@ void Laser::onFixedUpdate()
     sp::Vector2d laser_vector = aim_vector;
     getScene()->queryCollisionAll(sp::Ray2d(getPosition2D() + aim_vector / 5000.0, getPosition2D() + aim_vector), [this, &laser_vector](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
+        if (!object->isSolid())
+            return true;
         laser_vector = hit_location - getPosition2D();
         if (sp::P<Spaceship>(object))
             (sp::P<Spaceship>(object))->explode();
