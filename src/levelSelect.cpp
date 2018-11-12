@@ -4,6 +4,7 @@
 #include "levelScene.h"
 
 #include <sp2/scene/camera.h>
+#include <sp2/engine.h>
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
 #include <sp2/graphics/fontManager.h>
@@ -143,6 +144,9 @@ void LevelSelect::onFixedUpdate()
     {
         updateTrophys();
     }
+    
+    if (escape_key.getDown())
+        sp::Engine::getInstance()->shutdown();
     
     camera->setPosition(camera->getPosition2D() * 0.8 + selection->getPosition2D() * 0.2);
 }

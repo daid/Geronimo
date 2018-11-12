@@ -271,7 +271,7 @@ void LevelScene::onFixedUpdate()
         }
     }
 
-    if (controls[0].start.getDown())
+    if (controls[0].start.getDown() || escape_key.getDown())
     {
         exitLevel();
     }

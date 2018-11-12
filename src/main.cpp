@@ -23,8 +23,6 @@
 #include "levelScene.h"
 #include "levelSelect.h"
 
-sp::Vector2d gravity;
-
 sp::P<sp::Window> window;
 
 Controls controls[2]{{0}, {1}};
