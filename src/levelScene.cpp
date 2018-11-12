@@ -224,6 +224,13 @@ void LevelScene::onFixedUpdate()
     view_position.x = std::max(-camera_view_range.x, view_position.x);
     view_position.y = std::min(camera_view_range.y, view_position.y);
     view_position.y = std::max(-camera_view_range.y, view_position.y);
+
+    if (shake)
+    {
+        shake--;
+        view_position.x += std::sin(float(shake) * 3) * 1.5;
+        view_position.y += std::cos(float(shake) * 7) * 1.5;
+    }
     camera->setPosition(view_position);
 
     if (level_already_finished)
@@ -254,7 +261,7 @@ void LevelScene::onFixedUpdate()
                 }
                 else
                 {
-                    loadLevel(level_name);
+                    levelFailed();
                 }
             }
         }
@@ -316,6 +323,18 @@ void LevelScene::levelFinished()
     {
         exitLevel();
     }
+}
+
+void LevelScene::levelFailed()
+{
+    bool activity = false;
+    for(auto player : players)
+        activity = activity || player->hadActivity();
+    
+    if (activity)
+        loadLevel(level_name);
+    else
+        exitLevel();
 }
 
 void LevelScene::earnTrophy(int type_bits)

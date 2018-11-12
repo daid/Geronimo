@@ -50,6 +50,7 @@ void Spaceship::onFixedUpdate()
         
         if (controls->primary_action.get())
         {
+            activity = true;
             sp::Vector2d trust_vector = sp::Vector2d(0, trust_speed).rotate(getRotation2D());
             velocity += trust_vector;
             
@@ -173,4 +174,5 @@ void Spaceship::explode()
     controls = nullptr;
     render_data.color.a = 0.5;
     alive = false;
+    sp::P<LevelScene>(getScene())->doCameraShake();
 }

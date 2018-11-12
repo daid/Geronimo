@@ -21,6 +21,7 @@ public:
     void explode();
     
     bool isAlive() { return alive; }
+    bool hadActivity() { return activity; }
     
     void setIcon(sp::string name);
     
@@ -31,6 +32,7 @@ private:
     sp::Vector2d old_velocity;
     sp::P<sp::ParticleEmitter> engine_emitter;
     bool alive = true;
+    bool activity = false;
     sp::P<GrablingRope> rope;
 };
 

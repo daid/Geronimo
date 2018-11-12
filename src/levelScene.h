@@ -19,10 +19,12 @@ public:
     
     virtual void onFixedUpdate() override;
     virtual void onUpdate(float delta) override;
+    void doCameraShake() { shake = 15; }
     
     bool inTargetArea(sp::Vector2d position);
 private:
     void levelFinished();
+    void levelFailed();
     void earnTrophy(int type_bits);
     void exitLevel();
 
@@ -31,6 +33,7 @@ private:
     sp::P<sp::Camera> camera;
     sp::Vector2d camera_view_range;
     int end_level_countdown;
+    int shake = 0;
     bool level_already_finished;
     sp::string level_name;
     std::vector<sp::Rect2d> target_areas;

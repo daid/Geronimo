@@ -33,10 +33,14 @@ Laser::Laser(sp::P<sp::Node> parent, sp::string trigger)
 
 void Laser::onTrigger()
 {
+    active = false;
+    render_data.type = sp::RenderData::Type::None;
 }
 
 void Laser::onUnTrigger()
 {
+    active = true;
+    render_data.type = sp::RenderData::Type::Additive;
 }
 
 void Laser::setAngle(float angle)
@@ -46,6 +50,9 @@ void Laser::setAngle(float angle)
 
 void Laser::onFixedUpdate()
 {
+    if (!active)
+        return;
+
     sp::Vector2d laser_vector = aim_vector;
     getScene()->queryCollisionAll(sp::Ray2d(getPosition2D() + aim_vector / 5000.0, getPosition2D() + aim_vector), [this, &laser_vector](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
