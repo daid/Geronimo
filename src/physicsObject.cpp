@@ -15,6 +15,6 @@ PhysicsObject::PhysicsObject(sp::P<sp::Node> parent, sp::string name)
 void PhysicsObject::onFixedUpdate()
 {
     sp::Vector2d velocity = getLinearVelocity2D();
-    velocity += level_info.gravity;
+    velocity += level_info.getGravityAt(getPosition2D());
     setLinearVelocity(velocity);
 }

@@ -31,9 +31,9 @@ void LevelScene::loadLevel(sp::string name)
         for(auto obj : getRoot()->getChildren())
             delete obj;
         level_name = name;
-        level_info.gravity = sp::Vector2d(0, -0.15);
         level_info.fuel_ticks_used = 0;
         level_info.time_ticks = 0;
+        level_info.center_point_gravity = false;
         level_already_finished = false;
         end_level_countdown = 60;
     
@@ -151,6 +151,11 @@ void LevelScene::loadLevel(sp::string name)
                     }
                     new Trigger(getRoot(), sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
                 }
+                else if (object["type"] == "GRAVITY")
+                {
+                    level_info.center_point_gravity = true;
+                    level_info.gravity_center = position;
+                }
                 else if (object["type"] != "")
                 {
                     LOG(Warning, "Unknown object type:", object["type"].string_value());
@@ -197,7 +202,7 @@ void LevelScene::onFixedUpdate()
         if (player->isAlive())
         {
             alive = true;
-            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - level_info.gravity).length() > 0.05)
+            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.05)
                 in_target = false;
             else
                 player->setIcon("checkmark");
@@ -214,7 +219,7 @@ void LevelScene::onFixedUpdate()
         for(auto target : target_objects)
         {
             sp::Vector2d position = target->getPosition2D();
-            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.gravity).length() > 0.5)
+            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.5)
                 in_target = false;
         }
     }
@@ -392,4 +397,11 @@ void LevelScene::exitLevel()
     disable();
     gui->hide();
     sp::Scene::get("LEVEL_SELECT")->enable();
+}
+
+sp::Vector2d LevelInfo::getGravityAt(sp::Vector2d position)
+{
+    if (center_point_gravity)
+        return (position - gravity_center).normalized() * -0.15;
+    return sp::Vector2d(0, -0.15);
 }

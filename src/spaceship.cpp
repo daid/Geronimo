@@ -41,7 +41,7 @@ void Spaceship::onFixedUpdate()
 
     double angular_velocity = getAngularVelocity2D() * 0.95;
     sp::Vector2d velocity = getLinearVelocity2D();
-    velocity += level_info.gravity;
+    velocity += level_info.getGravityAt(getPosition2D());
 
     if (controls && alive)
     {

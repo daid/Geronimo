@@ -44,12 +44,15 @@ private:
 class LevelInfo
 {
 public:
-    sp::Vector2d gravity;
+    sp::Vector2d getGravityAt(sp::Vector2d position);
     int fuel_ticks_used;
     int time_ticks;
     
     int fuel_trophy;
     int time_trophy;
+    
+    bool center_point_gravity;
+    sp::Vector2d gravity_center;
 };
 
 extern LevelInfo level_info;

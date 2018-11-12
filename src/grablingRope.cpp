@@ -55,7 +55,7 @@ void GrablingRope::onFixedUpdate()
     }
     sp::Vector2d velocity = getLinearVelocity2D();
     velocity *= 0.99;
-    velocity += level_info.gravity;
+    velocity += level_info.getGravityAt(getGlobalPosition2D());
     setLinearVelocity(velocity);
 }
 
