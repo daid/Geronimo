@@ -18,6 +18,14 @@
         alignment: center
         visible: false
     }
+    [CAMERA_PREVIEW] {
+        type: image
+        texture: gui/theme/pixel.png
+        size: 120, 90
+        alignment: topright
+        margin: -30, -30
+        visible: false
+    }
 }
 
 [@RECORD_BAR] {

@@ -5,7 +5,7 @@
 #include <sp2/scene/camera.h>
 #include <sp2/math/rect.h>
 #include <sp2/graphics/gui/widget/widget.h>
-
+#include "cameraCaptureTexture.h"
 
 class Spaceship;
 class LevelScene : public sp::Scene
@@ -25,7 +25,8 @@ public:
 private:
     void levelFinished();
     void levelFailed();
-    void earnTrophy(int type_bits);
+    void earnTrophyA(int flags);
+    void earnTrophyB(int flags);
     void exitLevel();
 
     sp::PList<Spaceship> players;
@@ -35,10 +36,13 @@ private:
     int end_level_countdown;
     int shake = 0;
     bool level_already_finished;
+    int trophy_earned_flags;
     sp::string level_name;
     std::vector<sp::Rect2d> target_areas;
     
     sp::P<sp::gui::Widget> gui;
+    
+    CameraCaptureTexture* camera_capture_texture;
 };
 
 class LevelInfo

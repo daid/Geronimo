@@ -22,7 +22,10 @@ LevelScene::LevelScene()
 {
     gui = sp::gui::Loader::load("gui/hud.gui", "HUD");
     gui->hide();
+    gui->getWidgetWithID("CAMERA_PREVIEW")->setRotation(-90);
     disable();
+    
+    camera_capture_texture = new CameraCaptureTexture();
 }
 
 void LevelScene::loadLevel(sp::string name)
@@ -43,6 +46,7 @@ void LevelScene::loadLevel(sp::string name)
         
         gui->show();
         gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
+        gui->getWidgetWithID("CAMERA_PREVIEW")->hide();
         
         FILE* f = fopen((name + ".trophy").c_str(), "rb");
         if (f)
@@ -240,12 +244,16 @@ void LevelScene::onFixedUpdate()
 
     if (level_already_finished)
     {
+        gui->getWidgetWithID("CAMERA_PREVIEW")->render_data.texture = camera_capture_texture;
+
         if (end_level_countdown > 0)
         {
             end_level_countdown--;
         }
         else
         {
+            if (trophy_earned_flags)
+                earnTrophyB(trophy_earned_flags);
             exitLevel();
         }
     }
@@ -322,7 +330,7 @@ void LevelScene::levelFinished()
     if (trophy)
     {
         end_level_countdown = 60 * 3;
-        earnTrophy(trophy);
+        earnTrophyA(trophy);
     }
     else
     {
@@ -342,23 +350,10 @@ void LevelScene::levelFailed()
         exitLevel();
 }
 
-void LevelScene::earnTrophy(int type_bits)
+void LevelScene::earnTrophyA(int flags)
 {
-    sp::io::CameraCapture camera_capture(0);
-    if (camera_capture.isOpen())
-    {
-        sp::Image photo = camera_capture.getFrame();
-        if (type_bits & 1)
-        {
-            photo.saveToFile("photos/" + level_name + ".trophy.fuel.png");
-            sp::texture_manager.forceRefresh(level_name + ".trophy.fuel.png");
-        }
-        if (type_bits & 2)
-        {
-            photo.saveToFile("photos/" + level_name + ".trophy.time.png");
-            sp::texture_manager.forceRefresh(level_name + ".trophy.time.png");
-        }
-    }
+    trophy_earned_flags = flags;
+    camera_capture_texture->open(0);
 
     FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
     fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
@@ -366,8 +361,9 @@ void LevelScene::earnTrophy(int type_bits)
     fclose(f);
     
     gui->getWidgetWithID("BIG_ASS_TROPHY")->show();
+    gui->getWidgetWithID("CAMERA_PREVIEW")->show();
     
-    for(int n=0; n<10; n++) //Create fireworks!
+    for(int n=0; n<15; n++) //Create fireworks!
     {
         sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(camera, 64, sp::ParticleEmitter::Origin::Local);
         pe->setPosition(sp::Vector2d(sp::random(-60, 60), sp::random(-60, 60)));
@@ -392,10 +388,29 @@ void LevelScene::earnTrophy(int type_bits)
     }
 }
 
+void LevelScene::earnTrophyB(int flags)
+{
+    sp::Image photo = camera_capture_texture->getFrame();
+    if (photo.getSize().x < 10)
+        return;
+
+    if (flags & 1)
+    {
+        photo.saveToFile("photos/" + level_name + ".trophy.fuel.png");
+        sp::texture_manager.forceRefresh(level_name + ".trophy.fuel.png");
+    }
+    if (flags & 2)
+    {
+        photo.saveToFile("photos/" + level_name + ".trophy.time.png");
+        sp::texture_manager.forceRefresh(level_name + ".trophy.time.png");
+    }
+}
+
 void LevelScene::exitLevel()
 {
     disable();
     gui->hide();
+    camera_capture_texture->close();
     sp::Scene::get("LEVEL_SELECT")->enable();
 }
 
