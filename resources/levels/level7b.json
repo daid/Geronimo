@@ -221,53 +221,14 @@
                         {
                          "name":"offset",
                          "type":"string",
-                         "value":"0,20"
+                         "value":"0,-20"
                         }],
                  "rotation":0,
                  "type":"DOOR",
                  "visible":true,
                  "width":0,
                  "x":1968,
-                 "y":736
-                }, 
-                {
-                 "height":65.1086,
-                 "id":68,
-                 "name":"door_a",
-                 "rotation":0,
-                 "type":"TRIGGER",
-                 "visible":true,
-                 "width":63.4547,
-                 "x":2208,
-                 "y":1008
-                }, 
-                {
-                 "height":0,
-                 "id":69,
-                 "name":"",
-                 "polygon":[
-                        {
-                         "x":0,
-                         "y":32
-                        }, 
-                        {
-                         "x":96,
-                         "y":32
-                        }, 
-                        {
-                         "x":96,
-                         "y":64
-                        }, 
-                        {
-                         "x":0,
-                         "y":64
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":0,
-                 "x":2192,
-                 "y":1040
+                 "y":400
                 }],
          "opacity":1,
          "type":"objectgroup",
