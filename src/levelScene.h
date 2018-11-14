@@ -32,13 +32,11 @@ private:
     sp::PList<Spaceship> players;
     sp::PList<sp::Node> target_objects;
     sp::P<sp::Camera> camera;
-    sp::Vector2d camera_view_range;
     int end_level_countdown;
     int shake = 0;
     bool level_already_finished;
     int trophy_earned_flags;
     sp::string level_name;
-    std::vector<sp::Rect2d> target_areas;
     
     sp::P<sp::gui::Widget> gui;
     
@@ -54,6 +52,9 @@ public:
     
     int fuel_trophy;
     int time_trophy;
+
+    sp::Vector2d camera_view_range;
+    std::vector<sp::Rect2d> target_areas; //TODO: Replace with with a better system
     
     bool center_point_gravity;
     sp::Vector2d gravity_center;

@@ -6,6 +6,7 @@
 #include "laser.h"
 #include "physicsObject.h"
 #include "trigger.h"
+#include "levelLoader.h"
 
 #include <json11/json11.hpp>
 #include <sp2/random.h>
@@ -30,166 +31,29 @@ LevelScene::LevelScene()
 
 void LevelScene::loadLevel(sp::string name)
 {
+    level_name = name;
+    level_already_finished = false;
+    end_level_countdown = 60;
+    level_info.target_areas.clear();
+
+    gui->show();
+    gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
+    gui->getWidgetWithID("CAMERA_PREVIEW")->hide();
+
+    ::loadLevel(getRoot(), name);
+
+    for(auto obj : getRoot()->getChildren())
     {
-        for(auto obj : getRoot()->getChildren())
-            delete obj;
-        level_name = name;
-        level_info.fuel_ticks_used = 0;
-        level_info.time_ticks = 0;
-        level_info.center_point_gravity = false;
-        level_already_finished = false;
-        end_level_countdown = 60;
-    
-        level_info.fuel_trophy = 6000;
-        level_info.time_trophy = 10 * 60 * 60;
-        target_areas.clear();
-        
-        gui->show();
-        gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
-        gui->getWidgetWithID("CAMERA_PREVIEW")->hide();
-        
-        FILE* f = fopen((name + ".trophy").c_str(), "rb");
-        if (f)
-        {
-            fread(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
-            fread(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
-            fclose(f);
-        }
+        sp::P<sp::Node> n = sp::P<sp::Node>(obj);
+        players.add(n);
+        sp::P<PhysicsObject> po = n;
+        if (po && po->isGoal())
+            target_objects.add(po);
     }
-    
-    {
-        LineNodeBuilder builder;
-        builder.loadFrom("levels/" + name + ".json", 2.0);
-        sp::P<sp::Node> node = new sp::Node(getRoot());
-        builder.create(node, LineNodeBuilder::CollisionType::Chains);
-        node->render_data.color = sp::Color(0.8, 1.0, 0.8);
-    }
-    {
-        std::string err;
-        json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get("levels/" + name + ".json")->readAll(), err);
-        
-        float tw = json["tilewidth"].number_value();
-        float th = json["tileheight"].number_value();
-        float offset_x = json["width"].number_value() / 2.0;
-        float offset_y = json["height"].number_value() / 2.0;
-        for(const auto& layer : json["layers"].array_items())
-        {
-            for(const auto& object : layer["objects"].array_items())
-            {
-                float x = object["x"].number_value();
-                float y = -object["y"].number_value();
-                sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
-                
-                if (object["type"] == "ICON")
-                {
-                    addIcon(position, object["name"].string_value());
-                }
-                else if (object["type"] == "START")
-                {
-                    int index = sp::stringutil::convert::toInt(object["name"].string_value());
-                    sp::P<Spaceship> spaceship = new Spaceship(getRoot());
-                    spaceship->setPosition(position);
-                    spaceship->setControls(&controls[index]);
-                    spaceship->icon = addIcon(position, "gamepad" + sp::string(index + 1));
-                    players.add(spaceship);
-                }
-                else if (object["type"] == "TARGET")
-                {
-                    float w = object["width"].number_value();
-                    float h = -object["height"].number_value();
-                    
-                    target_areas.emplace_back(position.x, position.y + h / th, w / tw, -h / th);
-                }
-                else if (object["type"] == "OBJECT")
-                {
-                    sp::P<PhysicsObject> node = new PhysicsObject(getRoot(), object["name"].string_value());
-                    node->setPosition(position);
-                    
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
-                            target_objects.add(node);
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
-                }
-                else if (object["type"] == "DOOR")
-                {
-                    sp::P<Door> door = new Door(getRoot(), object["name"].string_value());
-                    LineNodeBuilder builder;
-                    builder.addLoop(json, object, 2.0);
-                    builder.create(door, LineNodeBuilder::CollisionType::Chains);
-                    //node->render_data.color = sp::Color(0.8, 1.0, 0.8);
 
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "offset")
-                            door->opened_position = sp::stringutil::convert::toVector2d(prop["value"].string_value());
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
-                }
-                else if (object["type"] == "LASER")
-                {
-                    sp::P<Laser> laser = new Laser(getRoot(), object["name"].string_value());
-                    laser->setPosition(position);
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "angle")
-                            laser->setAngle(sp::stringutil::convert::toFloat(prop["value"].string_value()));
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
-                }
-                else if (object["type"] == "TRIGGER")
-                {
-                    float w = object["width"].number_value();
-                    float h = -object["height"].number_value();
-                    
-                    sp::string target = object["name"].string_value();
-                    sp::string source = "";
-                    if (target.find(":") > -1)
-                    {
-                        source = target.substr(0, target.find(":"));
-                        target = target.substr(target.find(":") + 1);
-                    }
-                    new Trigger(getRoot(), sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
-                }
-                else if (object["type"] == "GRAVITY")
-                {
-                    level_info.center_point_gravity = true;
-                    level_info.gravity_center = position;
-                }
-                else if (object["type"] != "")
-                {
-                    LOG(Warning, "Unknown object type:", object["type"].string_value());
-                }
-            }
-        }
-        
-        camera = new sp::Camera(getRoot());
-        camera->setOrtographic(60);
-        setDefaultCamera(camera);
-        
-        camera_view_range = sp::Vector2d(std::max(0.0f, offset_x - 60), std::max(0.0f, offset_y - 60));
-    }
-}
-
-sp::P<sp::Node> LevelScene::addIcon(sp::Vector2d position, sp::string name)
-{
-    static std::shared_ptr<sp::MeshData> quad;
-    if (!quad)
-        quad = sp::MeshData::createQuad(sp::Vector2f(8, 8));
-
-    sp::P<sp::Node> node = new sp::Node(getRoot());
-
-    node->render_data.type = sp::RenderData::Type::Additive;
-    node->render_data.shader = sp::Shader::get("internal:basic.shader");
-    node->render_data.mesh = quad;
-    node->render_data.texture = sp::texture_manager.get("gui/icons/" + name + ".png");
-    node->render_data.color.a = 0.8;
-    node->setPosition(position);
-    return node;
+    camera = new sp::Camera(getRoot());
+    camera->setOrtographic(60);
+    setDefaultCamera(camera);
 }
 
 void LevelScene::onFixedUpdate()
@@ -229,10 +93,10 @@ void LevelScene::onFixedUpdate()
     }
     
     view_position /= double(players.size());
-    view_position.x = std::min(camera_view_range.x, view_position.x);
-    view_position.x = std::max(-camera_view_range.x, view_position.x);
-    view_position.y = std::min(camera_view_range.y, view_position.y);
-    view_position.y = std::max(-camera_view_range.y, view_position.y);
+    view_position.x = std::min(level_info.camera_view_range.x, view_position.x);
+    view_position.x = std::max(-level_info.camera_view_range.x, view_position.x);
+    view_position.y = std::min(level_info.camera_view_range.y, view_position.y);
+    view_position.y = std::max(-level_info.camera_view_range.y, view_position.y);
 
     if (shake)
     {
@@ -307,7 +171,7 @@ void LevelScene::onUpdate(float delta)
 
 bool LevelScene::inTargetArea(sp::Vector2d position)
 {
-    for(auto& target_area : target_areas)
+    for(auto& target_area : level_info.target_areas)
         if (target_area.contains(position))
             return true;
     return false;
