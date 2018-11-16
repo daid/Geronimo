@@ -29,7 +29,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
 
         level_info.fuel_trophy = 6000;
         level_info.time_trophy = 10 * 60 * 60;
-        
+
         FILE* f = fopen((name + ".trophy").c_str(), "rb");
         if (f)
         {
@@ -38,7 +38,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
             fclose(f);
         }
     }
-    
+
     {
         LineNodeBuilder builder;
         builder.loadFrom("levels/" + name + ".json", 2.0);
@@ -49,7 +49,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
     {
         std::string err;
         json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get("levels/" + name + ".json")->readAll(), err);
-        
+
         float tw = json["tilewidth"].number_value();
         float th = json["tileheight"].number_value();
         float offset_x = json["width"].number_value() / 2.0;
@@ -61,7 +61,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 float x = object["x"].number_value();
                 float y = -object["y"].number_value();
                 sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
-                
+
                 if (object["type"] == "ICON")
                 {
                     addIcon(root, position, object["name"].string_value());
@@ -78,19 +78,30 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 {
                     float w = object["width"].number_value();
                     float h = -object["height"].number_value();
-                    
+
                     level_info.target_areas.emplace_back(position.x, position.y + h / th, w / tw, -h / th);
                 }
                 else if (object["type"] == "OBJECT")
                 {
                     sp::P<PhysicsObject> node = new PhysicsObject(root, object["name"].string_value());
                     node->setPosition(position);
-                    
+
                     for(const auto& prop : object["properties"].array_items())
                     {
                         if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
                             node->setAsGoalObject();
-                        else
+                        else if (prop["name"] == "initial_velocity") {
+                            const std::string velocity_str = prop["value"].string_value();
+                            const size_t comma_pos = velocity_str.find(",");
+                            if (comma_pos == std::string::npos)
+                                LOG(Warning, "Invalid initial velocity (needs comma delimiter):", velocity_str);
+                            const std::string velocity_x = velocity_str.substr(0, comma_pos);
+                            const std::string velocity_y = velocity_str.substr(comma_pos + 1);
+                            sp::Vector2d velocity(sp::stringutil::convert::toFloat(velocity_x),
+                                                  sp::stringutil::convert::toFloat(velocity_y));
+                            node->setLinearVelocity(velocity);
+						}
+						else
                             LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
                     }
                 }
@@ -126,7 +137,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 {
                     float w = object["width"].number_value();
                     float h = -object["height"].number_value();
-                    
+
                     sp::string target = object["name"].string_value();
                     sp::string source = "";
                     if (target.find(":") > -1)
@@ -147,7 +158,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
             }
         }
-        
+
         level_info.camera_view_range = sp::Vector2d(std::max(0.0f, offset_x - 60), std::max(0.0f, offset_y - 60));
     }
 }
