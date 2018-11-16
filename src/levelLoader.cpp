@@ -100,8 +100,8 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                             sp::Vector2d velocity(sp::stringutil::convert::toFloat(velocity_x),
                                                   sp::stringutil::convert::toFloat(velocity_y));
                             node->setLinearVelocity(velocity);
-						}
-						else
+                        }
+                        else
                             LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
                     }
                 }
