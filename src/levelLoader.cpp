@@ -91,14 +91,12 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                         if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
                             node->setAsGoalObject();
                         else if (prop["name"] == "initial_velocity") {
-                            const std::string velocity_str = prop["value"].string_value();
-                            const size_t comma_pos = velocity_str.find(",");
-                            if (comma_pos == std::string::npos)
-                                LOG(Warning, "Invalid initial velocity (needs comma delimiter):", velocity_str);
-                            const std::string velocity_x = velocity_str.substr(0, comma_pos);
-                            const std::string velocity_y = velocity_str.substr(comma_pos + 1);
-                            sp::Vector2d velocity(sp::stringutil::convert::toFloat(velocity_x),
-                                                  sp::stringutil::convert::toFloat(velocity_y));
+                            const sp::string velocity_str = prop["value"].string_value();
+                            const std::vector<sp::string> velocity_split = velocity_str.split(",");
+                            if (velocity_split.size() < 2)
+                                LOG(Warning, "Invalid initial velocity (format X,Y):", velocity_str);
+                            const sp::Vector2d velocity(sp::stringutil::convert::toFloat(velocity_split[0]),
+                                                  sp::stringutil::convert::toFloat(velocity_split[1]));
                             node->setLinearVelocity(velocity);
                         }
                         else
