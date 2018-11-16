@@ -47,12 +47,18 @@
                  "id":24,
                  "name":"Ball",
                  "point":true,
+                 "properties":[
+                        {
+                         "name":"initial_velocity",
+                         "type":"string",
+                         "value":"-3,25"
+                        }],
                  "rotation":0,
                  "type":"OBJECT",
                  "visible":true,
                  "width":0,
-                 "x":191,
-                 "y":4078
+                 "x":-527.181818181818,
+                 "y":2884.06060606061
                 }, 
                 {
                  "height":171.383739556634,
