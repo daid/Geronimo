@@ -90,6 +90,8 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                     {
                         if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
                             node->setAsGoalObject();
+                        else if (prop["name"] == "velocity")
+                            node->setLinearVelocity(sp::stringutil::convert::toVector2d(prop["value"].string_value()));
                         else
                             LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
                     }
