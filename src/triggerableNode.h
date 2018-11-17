@@ -14,10 +14,14 @@ public:
     }
 
     const sp::string& getTriggerName() { return trigger_name; }
-    
+
+    void triggerAdd();
+    void triggerSubstract();
+protected:
     virtual void onTrigger() = 0;
     virtual void onUnTrigger() {}
 private:
+    int trigger_counter = 0;
     sp::string trigger_name;
 };
 

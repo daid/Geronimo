@@ -64,9 +64,9 @@ void Trigger::onFixedUpdate()
                 if (t && t->getTriggerName() == target)
                 {
                     if (active)
-                        t->onTrigger();
+                        t->triggerAdd();
                     else
-                        t->onUnTrigger();
+                        t->triggerSubstract();
                 }
             }
         }
