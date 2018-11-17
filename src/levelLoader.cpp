@@ -90,13 +90,17 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                     {
                         if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
                             node->setAsGoalObject();
-                        else if (prop["name"] == "initial_velocity") {
+                        else if (prop["name"] == "initial_velocity")
+                        {
                             const sp::string velocity_str = prop["value"].string_value();
                             const std::vector<sp::string> velocity_split = velocity_str.split(",");
                             if (velocity_split.size() < 2)
+                            {
                                 LOG(Warning, "Invalid initial velocity (format X,Y):", velocity_str);
+                                continue;
+                            }
                             const sp::Vector2d velocity(sp::stringutil::convert::toFloat(velocity_split[0]),
-                                                  sp::stringutil::convert::toFloat(velocity_split[1]));
+                                                        sp::stringutil::convert::toFloat(velocity_split[1]));
                             node->setLinearVelocity(velocity);
                         }
                         else
