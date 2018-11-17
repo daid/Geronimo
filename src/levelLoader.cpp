@@ -7,6 +7,7 @@
 #include "laser.h"
 #include "physicsObject.h"
 #include "trigger.h"
+#include "timer.h"
 #include "levelLoader.h"
 
 #include <json11/json11.hpp>
@@ -137,6 +138,24 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                         target = target.substr(target.find(":") + 1);
                     }
                     new Trigger(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
+                }
+                else if (object["type"] == "TIMER")
+                {
+                    sp::string target = object["name"].string_value();
+                    sp::P<Timer> timer = new Timer(root, target);
+                    for(const auto& prop : object["properties"].array_items())
+                    {
+                        if (prop["name"] == "delay")
+                            timer->on_time = timer->off_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
+                        else if (prop["name"] == "on_delay")
+                            timer->on_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
+                        else if (prop["name"] == "off_delay")
+                            timer->on_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
+                        else if (prop["name"] == "start_delay")
+                            timer->trigger_delay = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
+                        else
+                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
+                    }
                 }
                 else if (object["type"] == "GRAVITY")
                 {
