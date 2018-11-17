@@ -93,13 +93,14 @@ LevelSelect::LevelSelect()
         else
             selection = next;
         prev = next;
-        
-        if (sp::io::ResourceProvider::get("levels/level" + sp::string(n+1) + "b.json") != nullptr)
+        for(char c='b'; sp::io::ResourceProvider::get("levels/level" + sp::string(n+1) + sp::string(c) + ".json") != nullptr; c++)
         {
-            sp::P<LevelNode> sub = new LevelNode(getRoot(), "level" + sp::string(n+1) + "b", sp::string(n + 1) + "b");
-            sub->setPosition(next->getPosition2D() + sp::Vector2d(10, -30));
-            new LevelNodeLink(next, sub);
+            sp::P<LevelNode> sub = new LevelNode(getRoot(), "level" + sp::string(n+1) + sp::string(c), sp::string(n + 1) + sp::string(c));
+            sub->setPosition(prev->getPosition2D() + sp::Vector2d(10, -30));
+            new LevelNodeLink(prev, sub);
+            prev = sub;
         }
+        prev = next;
     }
 
     gui = sp::gui::Loader::load("gui/level_select_hud.gui", "HUD");

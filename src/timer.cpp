@@ -15,31 +15,25 @@ Timer::Timer(sp::P<sp::Node> parent, sp::string target)
 void Timer::onFixedUpdate()
 {
     if (trigger_delay > 0)
-    {
         trigger_delay--;
-        if (trigger_delay == 0)
-        {
-            active = !active;
-            for(auto obj : getParent()->getChildren())
-            {
-                sp::P<TriggerableNode> t = sp::P<sp::Node>(obj);
-                if (t && t->getTriggerName() == target)
-                {
-                    if (active)
-                        t->triggerAdd();
-                    else
-                        t->triggerSubstract();
-                }
-            }
-            
-            if (active)
-                trigger_delay = off_time;
-            else
-                trigger_delay = on_time;
-        }
-    }
-    else
+    if (trigger_delay == 0)
     {
-        trigger_delay = on_time;
+        active = !active;
+        for(auto obj : getParent()->getChildren())
+        {
+            sp::P<TriggerableNode> t = sp::P<sp::Node>(obj);
+            if (t && t->getTriggerName() == target)
+            {
+                if (active)
+                    t->triggerAdd();
+                else
+                    t->triggerSubstract();
+            }
+        }
+        
+        if (active)
+            trigger_delay = off_time;
+        else
+            trigger_delay = on_time;
     }
 }
