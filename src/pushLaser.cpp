@@ -8,5 +8,5 @@ PushLaser::PushLaser(sp::P<sp::Node> parent, sp::string trigger)
 
 void PushLaser::onHit(sp::P<sp::Node> object, sp::Vector2d hit_location)
 {
-    object->setLinearVelocity(object->getLinearVelocity2D() + aim_vector * 0.001);
+    object->setLinearVelocity(object->getLinearVelocity2D() + aim_vector * 0.0007);
 }

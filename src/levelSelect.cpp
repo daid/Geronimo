@@ -24,13 +24,16 @@ public:
         
         if (label != "")
         {
+            float size = 5.0f;
+            if (label.length() > 2)
+                size = 3.5f;
             sp::P<sp::Node> node = new sp::Node(this);
             node->render_data.type = sp::RenderData::Type::Additive;
             node->render_data.shader = sp::Shader::get("internal:basic.shader");
-            node->render_data.mesh = sp::font_manager.get("gui/theme/KenVector Bold.ttf")->createString(label, 32, 5.0f, sp::Vector2d(0, 0), sp::Alignment::Bottom);
+            node->render_data.mesh = sp::font_manager.get("gui/theme/KenVector Bold.ttf")->createString(label, 32, size, sp::Vector2d(0, 0), sp::Alignment::Bottom);
             node->render_data.texture = sp::font_manager.get("gui/theme/KenVector Bold.ttf")->getTexture(32);
             node->render_data.color = sp::Color(0.8, 1.0, 0.8);
-            node->setPosition(sp::Vector2d(0, -3.0));
+            node->setPosition(sp::Vector2d(0, -size/5.0f*3.0));
         }
     }
     

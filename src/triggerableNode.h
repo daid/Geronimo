@@ -23,7 +23,8 @@ protected:
     virtual void onTrigger() = 0;
     virtual void onUnTrigger() {}
 private:
-    int trigger_counter = 0;
+    int trigger_counter = 0; //Currently active triggers.
+    int trigger_level = 1; //Amount of active triggers required for this triggerable to activate.
     sp::string trigger_name;
     bool once = false;
 };
