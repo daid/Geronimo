@@ -25,6 +25,7 @@ protected:
 private:
     int trigger_counter = 0;
     sp::string trigger_name;
+    bool once = false;
 };
 
 #endif//TRIGGER_H

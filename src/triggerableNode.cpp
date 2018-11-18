@@ -2,6 +2,8 @@
 
 void TriggerableNode::triggerAdd()
 {
+    if (once && trigger_counter)
+        return;
     if (!trigger_counter)
         onTrigger();
     trigger_counter++;
@@ -9,6 +11,8 @@ void TriggerableNode::triggerAdd()
 
 void TriggerableNode::triggerSubstract()
 {
+    if (once)
+        return;
     trigger_counter--;
     if (!trigger_counter)
         onUnTrigger();
@@ -16,5 +20,8 @@ void TriggerableNode::triggerSubstract()
 
 void TriggerableNode::setProperty(sp::string name, sp::string value)
 {
-    LevelObject::setProperty(name, value);
+    if (name == "trigger_once")
+        once = sp::stringutil::convert::toBool(value);
+    else
+        LevelObject::setProperty(name, value);
 }
