@@ -1,96 +1,13 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="80"
-   height="80"
-   viewBox="0 0 21.166666 21.166667"
-   version="1.1"
-   id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="flower7.svg"
-   inkscape:export-filename="C:\Persoonlijk\Projecten\Forks\Geronimo\resources\decorations\flower7.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
-  <defs
-     id="defs2">
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter839"
-       x="-0.051696818"
-       width="1.1033936"
-       y="-0.044796613"
-       height="1.0895932">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.29433054"
-         id="feGaussianBlur841" />
-    </filter>
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="-1.8797057"
-     inkscape:cy="31.334575"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1137"
-     inkscape:window-x="2552"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-275.83332)">
-    <g
-       id="g829"
-       style="opacity:0.3;filter:url(#filter839)">
-      <path
-         sodipodi:nodetypes="ccccc"
-         inkscape:connector-curvature="0"
-         id="path820"
-         d="m 10.824416,297.8018 -3.4410954,-11.19192 2.8397384,-4.57698 -7.3499116,1.40316 4.4767645,3.17382"
-         style="fill:none;fill-rule:evenodd;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path822"
-         d="m 9.3210247,292.89072 3.0067823,-3.04019"
-         style="fill:none;fill-rule:evenodd;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:1" />
-      <circle
-         r="2.6225822"
-         cy="287.62885"
-         cx="13.91472"
-         id="path824"
-         style="opacity:1;fill:none;fill-opacity:1;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    </g>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" version="1.1" viewBox="0 0 21.166666 21.166667" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="a" x="-.051697" y="-.044797" width="1.1034" height="1.0896" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="0.29433054"/>
+</filter>
+</defs>
+<g transform="translate(0 -275.83)" fill="none" filter="url(#a)" opacity=".3" stroke="#deffde" stroke-width="1.5875">
+<path d="m10.824 297.8-3.4411-11.192 2.8397-4.577-7.3499 1.4032 4.4768 3.1738" opacity="1"/>
+<path d="m9.321 292.89 3.0068-3.0402" opacity="1"/>
+<circle cx="13.915" cy="287.63" r="2.6226" opacity="1"/>
+</g>
 </svg>

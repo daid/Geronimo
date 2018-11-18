@@ -1,112 +1,16 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="80"
-   height="80"
-   viewBox="0 0 21.166666 21.166667"
-   version="1.1"
-   id="svg8"
-   inkscape:version="0.92.3 (2405546, 2018-03-11)"
-   sodipodi:docname="flower4.svg"
-   inkscape:export-filename="C:\Persoonlijk\Projecten\Forks\Geronimo\resources\decorations\flower4.png"
-   inkscape:export-xdpi="96"
-   inkscape:export-ydpi="96">
-  <defs
-     id="defs2">
-    <filter
-       inkscape:collect="always"
-       style="color-interpolation-filters:sRGB"
-       id="filter866"
-       x="-0.053762021"
-       width="1.107524"
-       y="-0.043353524"
-       height="1.086707">
-      <feGaussianBlur
-         inkscape:collect="always"
-         stdDeviation="0.35847538"
-         id="feGaussianBlur868" />
-    </filter>
-  </defs>
-  <sodipodi:namedview
-     id="base"
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1.0"
-     inkscape:pageopacity="0.0"
-     inkscape:pageshadow="2"
-     inkscape:zoom="7.9195959"
-     inkscape:cx="18.639018"
-     inkscape:cy="31.334575"
-     inkscape:document-units="mm"
-     inkscape:current-layer="layer1"
-     showgrid="false"
-     units="px"
-     inkscape:window-width="1920"
-     inkscape:window-height="1137"
-     inkscape:window-x="2552"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
-  <metadata
-     id="metadata5">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <g
-     inkscape:label="Layer 1"
-     inkscape:groupmode="layer"
-     id="layer1"
-     transform="translate(0,-275.83332)">
-    <g
-       id="g864"
-       style="opacity:0.3;filter:url(#filter866)">
-      <path
-         inkscape:connector-curvature="0"
-         id="path846"
-         d="M 6.3476512,297.53453 5.3453905,293.85957"
-         style="fill:none;fill-rule:evenodd;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path848"
-         d="m 11.024868,297.46771 -0.367496,-9.9892"
-         style="fill:none;fill-rule:evenodd;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:1" />
-      <path
-         inkscape:connector-curvature="0"
-         id="path850"
-         d="m 15.468224,297.66816 1.637026,-4.27631"
-         style="fill:none;fill-rule:evenodd;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;opacity:1" />
-      <circle
-         r="1.503391"
-         cy="292.69028"
-         cx="4.8108511"
-         id="path852"
-         style="opacity:1;fill:none;fill-opacity:1;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <circle
-         r="4.9611907"
-         cy="282.78458"
-         cx="10.373399"
-         id="path854"
-         style="opacity:1;fill:none;fill-opacity:1;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-      <circle
-         r="1.8541822"
-         cy="291.83835"
-         cx="17.456041"
-         id="path856"
-         style="opacity:1;fill:none;fill-opacity:1;stroke:#deffde;stroke-width:1.5875;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
-    </g>
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" version="1.1" viewBox="0 0 21.166666 21.166667" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="a" x="-.053762" y="-.043354" width="1.1075" height="1.0867" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="0.35847538"/>
+</filter>
+</defs>
+<g transform="translate(0 -275.83)" fill="none" filter="url(#a)" opacity=".3" stroke="#deffde" stroke-width="1.5875">
+<path d="m6.3477 297.53-1.0023-3.675" opacity="1"/>
+<path d="m11.025 297.47-0.3675-9.9892" opacity="1"/>
+<path d="m15.468 297.67 1.637-4.2763" opacity="1"/>
+<circle cx="4.8109" cy="292.69" r="1.5034" opacity="1"/>
+<circle cx="10.373" cy="282.78" r="4.9612" opacity="1"/>
+<circle cx="17.456" cy="291.84" r="1.8542" opacity="1"/>
+</g>
 </svg>
