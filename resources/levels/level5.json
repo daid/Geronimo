@@ -87,6 +87,50 @@
                  "width":0,
                  "x":1166,
                  "y":1802.42424242425
+                }, 
+                {
+                 "height":69.6969696969697,
+                 "id":45,
+                 "name":"flower1",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":51.5151515151515,
+                 "x":-311.757575757576,
+                 "y":1065.90909090909
+                }, 
+                {
+                 "height":52,
+                 "id":46,
+                 "name":"flower3",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":50.6666666666667,
+                 "x":382.666666666667,
+                 "y":856.666666666667
+                }, 
+                {
+                 "height":45.3333333333333,
+                 "id":47,
+                 "name":"flower7",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":38.6666666666667,
+                 "x":1505.33333333333,
+                 "y":1757.33333333333
+                }, 
+                {
+                 "height":56,
+                 "id":48,
+                 "name":"flower2",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":44,
+                 "x":1851.66666666667,
+                 "y":870
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -310,10 +354,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":45,
+ "nextobjectid":49,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,

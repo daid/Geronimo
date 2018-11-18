@@ -188,6 +188,50 @@
                  "width":0,
                  "x":336,
                  "y":1840
+                }, 
+                {
+                 "height":54,
+                 "id":29,
+                 "name":"flower5",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":49,
+                 "x":842,
+                 "y":1093
+                }, 
+                {
+                 "height":53,
+                 "id":30,
+                 "name":"flower7",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":59,
+                 "x":655,
+                 "y":1845
+                }, 
+                {
+                 "height":48,
+                 "id":31,
+                 "name":"shroom1",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":53,
+                 "x":736,
+                 "y":1850
+                }, 
+                {
+                 "height":45,
+                 "id":32,
+                 "name":"flower2",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":42,
+                 "x":1461,
+                 "y":1761
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -391,10 +435,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":29,
+ "nextobjectid":33,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,

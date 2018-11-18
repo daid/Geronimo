@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" version="1.1" viewBox="0 0 21.166666 21.166667" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="a" x="-.04873" y="-.047292" width="1.0975" height="1.0946" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="0.20078622"/>
+</filter>
+</defs>
+<g transform="translate(0 -275.83)" fill="none" filter="url(#a)" opacity=".3" stroke="#deffde" stroke-width="1.5875">
+<path d="m10.591 297.47 0.10023-7.6506"/>
+<path d="m6.1806 289.78 9.889 0.13363-1.637-2.6393h-6.9156z"/>
+</g>
+</svg>

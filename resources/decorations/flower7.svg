@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" version="1.1" viewBox="0 0 21.166666 21.166667" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="a" x="-.051697" y="-.044797" width="1.1034" height="1.0896" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="0.29433054"/>
+</filter>
+</defs>
+<g transform="translate(0 -275.83)" fill="none" filter="url(#a)" opacity=".3" stroke="#deffde" stroke-width="1.5875">
+<path d="m10.824 297.8-3.4411-11.192 2.8397-4.577-7.3499 1.4032 4.4768 3.1738" opacity="1"/>
+<path d="m9.321 292.89 3.0068-3.0402" opacity="1"/>
+<circle cx="13.915" cy="287.63" r="2.6226" opacity="1"/>
+</g>
+</svg>

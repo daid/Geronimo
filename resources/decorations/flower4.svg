@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="80" height="80" version="1.1" viewBox="0 0 21.166666 21.166667" xmlns="http://www.w3.org/2000/svg">
+<defs>
+<filter id="a" x="-.053762" y="-.043354" width="1.1075" height="1.0867" color-interpolation-filters="sRGB">
+<feGaussianBlur stdDeviation="0.35847538"/>
+</filter>
+</defs>
+<g transform="translate(0 -275.83)" fill="none" filter="url(#a)" opacity=".3" stroke="#deffde" stroke-width="1.5875">
+<path d="m6.3477 297.53-1.0023-3.675" opacity="1"/>
+<path d="m11.025 297.47-0.3675-9.9892" opacity="1"/>
+<path d="m15.468 297.67 1.637-4.2763" opacity="1"/>
+<circle cx="4.8109" cy="292.69" r="1.5034" opacity="1"/>
+<circle cx="10.373" cy="282.78" r="4.9612" opacity="1"/>
+<circle cx="17.456" cy="291.84" r="1.8542" opacity="1"/>
+</g>
+</svg>

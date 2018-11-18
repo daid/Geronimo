@@ -315,6 +315,17 @@
                  "width":0,
                  "x":2208,
                  "y":1040
+                }, 
+                {
+                 "height":70.6666666666667,
+                 "id":72,
+                 "name":"flower3",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":76,
+                 "x":606.666666666667,
+                 "y":1286.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -538,10 +549,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":72,
+ "nextobjectid":73,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,

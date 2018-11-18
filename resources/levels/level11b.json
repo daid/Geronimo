@@ -170,6 +170,17 @@
                  "width":0,
                  "x":1264,
                  "y":1041.33333333333
+                }, 
+                {
+                 "height":56.6666666666667,
+                 "id":45,
+                 "name":"flower4",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":56.6666666666666,
+                 "x":338.666666666667,
+                 "y":1422.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -333,10 +344,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":45,
+ "nextobjectid":46,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,
