@@ -300,6 +300,28 @@
                  "width":0,
                  "x":320,
                  "y":336
+                }, 
+                {
+                 "height":68,
+                 "id":42,
+                 "name":"flower3",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":70.6666666666666,
+                 "x":600,
+                 "y":1178.66666666667
+                }, 
+                {
+                 "height":34.6666666666667,
+                 "id":43,
+                 "name":"flower6",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":34.6666666666667,
+                 "x":1665.33333333333,
+                 "y":1056.66666666667
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -447,10 +469,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":42,
+ "nextobjectid":44,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,

@@ -68,6 +68,17 @@
                  "width":0,
                  "x":1328,
                  "y":416
+                }, 
+                {
+                 "height":50,
+                 "id":71,
+                 "name":"shroom3",
+                 "rotation":0,
+                 "type":"DECORATION",
+                 "visible":true,
+                 "width":43,
+                 "x":737.5,
+                 "y":18931
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -115,10 +126,10 @@
          "y":0
         }],
  "nextlayerid":4,
- "nextobjectid":71,
+ "nextobjectid":72,
  "orientation":"orthogonal",
  "renderorder":"left-up",
- "tiledversion":"1.2.0",
+ "tiledversion":"1.2.1",
  "tileheight":16,
  "tilesets":[],
  "tilewidth":16,
