@@ -54,8 +54,7 @@ void Laser::onFixedUpdate()
         if (!object->isSolid())
             return true;
         laser_vector = hit_location - getPosition2D();
-        if (sp::P<Spaceship>(object))
-            (sp::P<Spaceship>(object))->explode();
+        onHit(object, hit_location);
         return false;
     });
     render_data.scale.x = laser_vector.x;
@@ -73,8 +72,8 @@ void Laser::onFixedUpdate()
         parameters.velocity.x = sp::random(-7, 7);
         parameters.velocity.y = sp::random(-7, 7);
         parameters.acceleration = -parameters.velocity;
-        parameters.start_color = sp::Color(1, 0.5, 0.5);
-        parameters.end_color = sp::Color(1, 0, 0, 0);
+        parameters.start_color = render_data.color;
+        parameters.end_color = sp::Color(0, 0, 0, 0);
 
         parameters.start_size = 3.0;
         parameters.end_size = 5.0;
@@ -90,4 +89,10 @@ void Laser::setProperty(sp::string name, sp::string value)
         aim_vector = sp::Vector2d(0, 500).rotate(sp::stringutil::convert::toFloat(value));
     else
         TriggerableNode::setProperty(name, value);
+}
+
+void Laser::onHit(sp::P<sp::Node> object, sp::Vector2d hit_location)
+{
+    if (sp::P<Spaceship>(object))
+        (sp::P<Spaceship>(object))->explode();
 }
