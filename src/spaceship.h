@@ -1,12 +1,12 @@
 #ifndef SPACESHIP_H
 #define SPACESHIP_H
 
-#include <sp2/scene/node.h>
+#include "levelObject.h"
 #include <sp2/scene/particleEmitter.h>
 
 class Controls;
 class GrablingRope;
-class Spaceship : public sp::Node
+class Spaceship : public LevelObject
 {
 public:
     Spaceship(sp::P<sp::Node> parent);

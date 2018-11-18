@@ -63,6 +63,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 float x = object["x"].number_value();
                 float y = -object["y"].number_value();
                 sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
+                sp::P<LevelObject> obj;
 
                 if (object["type"] == "ICON")
                 {
@@ -81,6 +82,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                     spaceship->setPosition(position);
                     spaceship->setControls(&controls[index]);
                     spaceship->icon = addIcon(root, position, "gamepad" + sp::string(index + 1));
+                    obj = spaceship;
                 }
                 else if (object["type"] == "TARGET")
                 {
@@ -91,46 +93,20 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
                 else if (object["type"] == "OBJECT")
                 {
-                    sp::P<PhysicsObject> node = new PhysicsObject(root, object["name"].string_value());
-                    node->setPosition(position);
-
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "GOAL" && prop["value"] == "TARGET")
-                            node->setAsGoalObject();
-                        else if (prop["name"] == "velocity")
-                            node->setLinearVelocity(sp::stringutil::convert::toVector2d(prop["value"].string_value()));
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
+                    obj = new PhysicsObject(root, object["name"].string_value());
+                    obj->setPosition(position);
                 }
                 else if (object["type"] == "DOOR")
                 {
-                    sp::P<Door> door = new Door(root, object["name"].string_value());
+                    obj = new Door(root, object["name"].string_value());
                     LineNodeBuilder builder;
                     builder.addLoop(json, object, 2.0);
-                    builder.create(door, LineNodeBuilder::CollisionType::Chains);
-                    //node->render_data.color = sp::Color(0.8, 1.0, 0.8);
-
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "offset")
-                            door->opened_position = sp::stringutil::convert::toVector2d(prop["value"].string_value());
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
+                    builder.create(obj, LineNodeBuilder::CollisionType::Chains);
                 }
                 else if (object["type"] == "LASER")
                 {
-                    sp::P<Laser> laser = new Laser(root, object["name"].string_value());
-                    laser->setPosition(position);
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "angle")
-                            laser->setAngle(sp::stringutil::convert::toFloat(prop["value"].string_value()));
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
+                    obj = new Laser(root, object["name"].string_value());
+                    obj->setPosition(position);
                 }
                 else if (object["type"] == "TRIGGER")
                 {
@@ -144,25 +120,12 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                         source = target.substr(0, target.find(":"));
                         target = target.substr(target.find(":") + 1);
                     }
-                    new Trigger(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
+                    obj = new Trigger(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
                 }
                 else if (object["type"] == "TIMER")
                 {
                     sp::string target = object["name"].string_value();
-                    sp::P<Timer> timer = new Timer(root, target);
-                    for(const auto& prop : object["properties"].array_items())
-                    {
-                        if (prop["name"] == "delay")
-                            timer->on_time = timer->off_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
-                        else if (prop["name"] == "on_delay")
-                            timer->on_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
-                        else if (prop["name"] == "off_delay")
-                            timer->on_time = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
-                        else if (prop["name"] == "start_delay")
-                            timer->trigger_delay = sp::stringutil::convert::toFloat(prop["value"].string_value()) * 60.0;
-                        else
-                            LOG(Warning, "Unknown object property:", prop["name"].string_value(), prop["value"].string_value());
-                    }
+                    obj = new Timer(root, target);
                 }
                 else if (object["type"] == "GRAVITY")
                 {
@@ -172,6 +135,11 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 else if (object["type"] != "")
                 {
                     LOG(Warning, "Unknown object type:", object["type"].string_value());
+                }
+                if (obj)
+                {
+                    for(const auto& prop : object["properties"].array_items())
+                        obj->setProperty(prop["name"].string_value(), prop["value"].string_value());
                 }
             }
         }

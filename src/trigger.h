@@ -1,17 +1,18 @@
 #ifndef TRIGGER_H
 #define TRIGGER_H
 
-#include <sp2/scene/node.h>
+#include "levelObject.h"
 #include <sp2/math/rect.h>
 
 
-class Trigger : public sp::Node
+class Trigger : public LevelObject
 {
 public:
     Trigger(sp::P<sp::Node> parent, sp::Rect2d area, sp::string source, sp::string target);
 
     virtual void onFixedUpdate() override;
 
+    virtual void setProperty(sp::string name, sp::string value) override;
 private:
     sp::Rect2d area;
     sp::string source;

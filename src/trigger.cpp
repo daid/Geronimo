@@ -6,7 +6,7 @@
 
 
 Trigger::Trigger(sp::P<sp::Node> parent, sp::Rect2d area, sp::string source, sp::string target)
-: sp::Node(parent), area(area), source(source), target(target)
+: LevelObject(parent), area(area), source(source), target(target)
 {
     initialized = false;
     active = false;
@@ -71,4 +71,9 @@ void Trigger::onFixedUpdate()
             }
         }
     }
+}
+
+void Trigger::setProperty(sp::string name, sp::string value)
+{
+    LevelObject::setProperty(name, value);
 }

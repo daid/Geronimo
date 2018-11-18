@@ -14,7 +14,7 @@ public:
     virtual void onUnTrigger() override;
     virtual void onFixedUpdate() override;
 
-    void setAngle(float angle);
+    virtual void setProperty(sp::string name, sp::string value) override;
 private:
     sp::Vector2d aim_vector;
     bool active;

@@ -10,7 +10,7 @@
 
 
 Spaceship::Spaceship(sp::P<sp::Node> parent)
-: sp::Node(parent)
+: LevelObject(parent)
 {
     LineNodeBuilder builder;
     builder.loadFrom("ship-a.json", 1.5);

@@ -8,7 +8,7 @@
 
 
 Timer::Timer(sp::P<sp::Node> parent, sp::string target)
-: sp::Node(parent), target(target)
+: LevelObject(parent), target(target)
 {
 }
 
@@ -36,4 +36,18 @@ void Timer::onFixedUpdate()
         else
             trigger_delay = on_time;
     }
+}
+
+void Timer::setProperty(sp::string name, sp::string value)
+{
+    if (name == "delay")
+        on_time = off_time = sp::stringutil::convert::toFloat(value) * 60.0;
+    else if (name == "on_delay")
+        on_time = sp::stringutil::convert::toFloat(value) * 60.0;
+    else if (name == "off_delay")
+        off_time = sp::stringutil::convert::toFloat(value) * 60.0;
+    else if (name == "start_delay")
+        trigger_delay = sp::stringutil::convert::toFloat(value) * 60.0;
+    else
+        LevelObject::setProperty(name, value);
 }

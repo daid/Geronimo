@@ -28,7 +28,7 @@ Laser::Laser(sp::P<sp::Node> parent, sp::string trigger)
 
     active = true;
     sparkdelay = 0;
-    setAngle(0);
+    aim_vector = sp::Vector2d(0, 500);
 }
 
 void Laser::onTrigger()
@@ -41,11 +41,6 @@ void Laser::onUnTrigger()
 {
     active = true;
     render_data.type = sp::RenderData::Type::Additive;
-}
-
-void Laser::setAngle(float angle)
-{
-    aim_vector = sp::Vector2d(0, 500).rotate(angle);
 }
 
 void Laser::onFixedUpdate()
@@ -87,4 +82,12 @@ void Laser::onFixedUpdate()
         spark_emitter->emit(parameters);
         sparkdelay = 2;
     }
+}
+
+void Laser::setProperty(sp::string name, sp::string value)
+{
+    if (name == "angle")
+        aim_vector = sp::Vector2d(0, 500).rotate(sp::stringutil::convert::toFloat(value));
+    else
+        TriggerableNode::setProperty(name, value);
 }

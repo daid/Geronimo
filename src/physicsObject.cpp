@@ -5,7 +5,7 @@
 
 
 PhysicsObject::PhysicsObject(sp::P<sp::Node> parent, sp::string name)
-: sp::Node(parent)
+: LevelObject(parent)
 {
     LineNodeBuilder builder;
     builder.loadFrom(name + ".json", 1.5);
@@ -17,4 +17,14 @@ void PhysicsObject::onFixedUpdate()
     sp::Vector2d velocity = getLinearVelocity2D();
     velocity += level_info.getGravityAt(getPosition2D());
     setLinearVelocity(velocity);
+}
+
+void PhysicsObject::setProperty(sp::string name, sp::string value)
+{
+    if (name == "GOAL" && value == "TARGET")
+        is_goal = true;
+    else if (name == "velocity")
+        setLinearVelocity(sp::stringutil::convert::toVector2d(value));
+    else
+        LevelObject::setProperty(name, value);
 }

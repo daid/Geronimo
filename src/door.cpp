@@ -20,3 +20,11 @@ void Door::onFixedUpdate()
 {
     setPosition(getPosition2D() * 0.9 + target_position * 0.1);
 }
+
+void Door::setProperty(sp::string name, sp::string value)
+{
+    if (name == "offset")
+        opened_position = sp::stringutil::convert::toVector2d(value);
+    else
+        TriggerableNode::setProperty(name, value);
+}

@@ -12,6 +12,8 @@ public:
     virtual void onUnTrigger() override;
     virtual void onFixedUpdate() override;
 
+    virtual void setProperty(sp::string name, sp::string value) override;
+    
     sp::Vector2d opened_position;
 private:
     sp::Vector2d target_position;

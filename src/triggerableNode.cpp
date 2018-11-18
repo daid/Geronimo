@@ -13,3 +13,8 @@ void TriggerableNode::triggerSubstract()
     if (!trigger_counter)
         onUnTrigger();
 }
+
+void TriggerableNode::setProperty(sp::string name, sp::string value)
+{
+    LevelObject::setProperty(name, value);
+}

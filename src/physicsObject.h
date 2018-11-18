@@ -1,16 +1,17 @@
 #ifndef PHYSICS_OBJECT_H
 #define PHYSICS_OBJECT_H
 
-#include <sp2/scene/node.h>
+#include "levelObject.h"
 
-class PhysicsObject : public sp::Node
+class PhysicsObject : public LevelObject
 {
 public:
     PhysicsObject(sp::P<sp::Node> parent, sp::string name);
 
     virtual void onFixedUpdate() override;
     
-    void setAsGoalObject() { is_goal = true; }
+    virtual void setProperty(sp::string name, sp::string value) override;
+    
     bool isGoal() { return is_goal; }
 private:
     bool is_goal = false;
