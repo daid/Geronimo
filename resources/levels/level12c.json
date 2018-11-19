@@ -37,11 +37,6 @@
                  "point":true,
                  "properties":[
                         {
-                         "name":"GOAL",
-                         "type":"string",
-                         "value":"TARGET"
-                        }, 
-                        {
                          "name":"angular_velocity",
                          "type":"string",
                          "value":"15"
