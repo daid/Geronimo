@@ -1,6 +1,10 @@
 [VERTEX]
 #version 110
 
+attribute vec3 a_vertex;
+attribute vec3 a_normal;
+attribute vec2 a_uv;
+
 uniform mat4 projection_matrix;
 uniform mat4 camera_matrix;
 uniform mat4 object_matrix;
@@ -10,8 +14,8 @@ varying vec2 v_uv;
 
 void main()
 {
-    gl_Position = projection_matrix * camera_matrix * object_matrix * vec4(object_scale.xy * gl_Vertex.x + normalize(vec2(-object_scale.y, object_scale.x)) * gl_Vertex.y, 0.0, 1.0);
-    v_uv = gl_MultiTexCoord0.xy;
+    gl_Position = projection_matrix * camera_matrix * object_matrix * vec4(object_scale.xy * a_vertex.x + normalize(vec2(-object_scale.y, object_scale.x)) * a_vertex.y, 0.0, 1.0);
+    v_uv = a_uv.xy;
 }
 
 [FRAGMENT]
