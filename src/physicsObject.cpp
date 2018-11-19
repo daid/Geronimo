@@ -25,6 +25,8 @@ void PhysicsObject::setProperty(sp::string name, sp::string value)
         is_goal = true;
     else if (name == "velocity")
         setLinearVelocity(sp::stringutil::convert::toVector2d(value));
+    else if (name == "angular_velocity")
+        setAngularVelocity(sp::stringutil::convert::toFloat(value));
     else
         LevelObject::setProperty(name, value);
 }
