@@ -7,4 +7,8 @@ set(CMAKE_MODULE_PATH "${SP2_PATH}/cmake" ${CMAKE_MODULE_PATH})
 find_package(SeriousProton2 REQUIRED)
 
 file(GLOB_RECURSE SOURCES src/*.cpp)
-serious_proton2_executable(Geronimo ${SOURCES})
+serious_proton2_executable(${PROJECT_NAME} ${SOURCES})
+
+if(WIN32)
+    install(DIRECTORY resources DESTINATION ./)
+endif()
