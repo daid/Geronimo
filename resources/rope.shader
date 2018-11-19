@@ -1,6 +1,4 @@
 [VERTEX]
-#version 110
-
 attribute vec3 a_vertex;
 attribute vec3 a_normal;
 attribute vec2 a_uv;
@@ -19,8 +17,6 @@ void main()
 }
 
 [FRAGMENT]
-#version 110
-
 uniform sampler2D texture_map;
 uniform vec4 color;
 
