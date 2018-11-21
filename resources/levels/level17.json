@@ -89,8 +89,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":1648,
-                 "y":448
+                 "x":1824,
+                 "y":656
                 }, 
                 {
                  "height":65.1086,
@@ -109,12 +109,12 @@
                  "name":"",
                  "polygon":[
                         {
-                         "x":-192,
-                         "y":-64
+                         "x":-240,
+                         "y":-16
                         }, 
                         {
-                         "x":160,
-                         "y":-64
+                         "x":208,
+                         "y":-16
                         }, 
                         {
                          "x":320,
@@ -125,12 +125,12 @@
                          "y":96
                         }, 
                         {
-                         "x":112,
-                         "y":-16
+                         "x":160,
+                         "y":32
                         }, 
                         {
-                         "x":-144,
-                         "y":-16
+                         "x":-192,
+                         "y":32
                         }, 
                         {
                          "x":-256,
@@ -144,8 +144,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":1984,
-                 "y":352
+                 "x":2160,
+                 "y":560
                 }, 
                 {
                  "height":0,
@@ -167,8 +167,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":1712,
-                 "y":448
+                 "x":1888,
+                 "y":656
                 }, 
                 {
                  "height":0,
@@ -224,8 +224,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":2224,
-                 "y":448
+                 "x":2400,
+                 "y":656
                 }, 
                 {
                  "height":0,
@@ -247,8 +247,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":2288,
-                 "y":448
+                 "x":2464,
+                 "y":656
                 }, 
                 {
                  "height":0,
@@ -275,8 +275,8 @@
                  "type":"",
                  "visible":true,
                  "width":0,
-                 "x":2000,
-                 "y":624
+                 "x":2176,
+                 "y":832
                 }, 
                 {
                  "height":0,
@@ -287,13 +287,13 @@
                  "type":"OBJECT",
                  "visible":true,
                  "width":0,
-                 "x":1968,
-                 "y":512
+                 "x":2144,
+                 "y":720
                 }, 
                 {
                  "height":0,
                  "id":78,
-                 "name":"ball-small",
+                 "name":"bomb",
                  "point":true,
                  "rotation":0,
                  "type":"BOMB",
@@ -305,7 +305,7 @@
                 {
                  "height":0,
                  "id":79,
-                 "name":"ball-small",
+                 "name":"bomb",
                  "point":true,
                  "rotation":0,
                  "type":"BOMB",
@@ -317,7 +317,7 @@
                 {
                  "height":0,
                  "id":80,
-                 "name":"ball-small",
+                 "name":"bomb",
                  "point":true,
                  "rotation":0,
                  "type":"BOMB",
@@ -444,8 +444,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":1680,
-                 "y":560
+                 "x":1856,
+                 "y":768
                 }, 
                 {
                  "height":0,
@@ -467,8 +467,8 @@
                  "type":"LASER",
                  "visible":true,
                  "width":0,
-                 "x":2257.33333333333,
-                 "y":556
+                 "x":2433.33333333333,
+                 "y":764
                 }],
          "opacity":1,
          "type":"objectgroup",
