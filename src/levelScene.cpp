@@ -70,7 +70,7 @@ void LevelScene::onFixedUpdate()
         if (player->isAlive())
         {
             alive = true;
-            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.05)
+            if (target_objects.size() > 0 || !inTargetArea(position) || (player->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.07)
                 in_target = false;
             else
                 player->setIcon("checkmark");
@@ -87,7 +87,7 @@ void LevelScene::onFixedUpdate()
         for(auto target : target_objects)
         {
             sp::Vector2d position = target->getPosition2D();
-            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.5)
+            if (!inTargetArea(position) || (target->getLinearVelocity2D() - level_info.getGravityAt(position)).length() > 0.7)
                 in_target = false;
         }
     }

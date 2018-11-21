@@ -40,7 +40,7 @@ void Trigger::onFixedUpdate()
     bool has_object = false;
     for(auto obj : source_objects)
     {
-        if ((area.contains(obj->getPosition2D()) && obj->getLinearVelocity2D().length() < 0.5))
+        if ((area.contains(obj->getPosition2D()) && obj->getLinearVelocity2D().length() < 0.7))
         {
             has_object = true;
             break;
