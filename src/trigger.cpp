@@ -28,8 +28,11 @@ void Trigger::onFixedUpdate()
         else if (source == "OBJECT")
         {
             for(auto obj : getParent()->getChildren())
-                if (sp::P<PhysicsObject>(sp::P<sp::Node>(obj)))
+            {
+                sp::P<PhysicsObject> po = sp::P<sp::Node>(obj);
+                if (po && po->isTriggerSource())
                     source_objects.add(obj);
+            }
         }
         else
         {

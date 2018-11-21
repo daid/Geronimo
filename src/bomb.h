@@ -13,6 +13,7 @@ public:
     
     virtual void setProperty(sp::string name, sp::string value) override;
 
+    virtual bool isTriggerSource() override { return false; }
 private:
     double velocity_average = 0.0;
     enum class State

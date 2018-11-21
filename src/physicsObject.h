@@ -13,6 +13,8 @@ public:
     virtual void setProperty(sp::string name, sp::string value) override;
     
     bool isGoal() { return is_goal; }
+
+    virtual bool isTriggerSource() { return true; }
 private:
     bool is_goal = false;
 };
