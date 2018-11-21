@@ -19,7 +19,7 @@ public:
     sp::io::Keybinding secondary_action;
 
     sp::io::Keybinding unknown2;
-    sp::io::Keybinding unknown3;
+    sp::io::Keybinding restart;
     sp::io::Keybinding unknown4;
     sp::io::Keybinding unknown5;
     

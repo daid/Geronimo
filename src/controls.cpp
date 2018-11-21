@@ -9,7 +9,7 @@ Controls::Controls(int index)
 , primary_action("primary_action" + sp::string(index))
 , secondary_action("secondary_action" + sp::string(index))
 , unknown2("unknown2_" + sp::string(index))
-, unknown3("unknown3_" + sp::string(index))
+, restart("restart_" + sp::string(index))
 , unknown4("unknown4_" + sp::string(index))
 , unknown5("unknown5_" + sp::string(index))
 , start("start" + sp::string(index))
@@ -25,7 +25,7 @@ Controls::Controls(int index)
         secondary_action.setKey("z");
         
         unknown2.setKey("x");
-        unknown3.setKey("c");
+        restart.setKey("c");
         unknown4.setKey("v");
         unknown5.setKey("b");
         
@@ -43,7 +43,7 @@ Controls::Controls(int index)
         secondary_action.setKey("e");
         
         unknown2.setKey("r");
-        unknown3.setKey("t");
+        restart.setKey("t");
         unknown4.setKey("y");
         unknown5.setKey("u");
         

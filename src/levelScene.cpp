@@ -152,6 +152,10 @@ void LevelScene::onFixedUpdate()
     {
         exitLevel();
     }
+    if (controls[0].restart.getDown() || controls[1].restart.getDown())
+    {
+        loadLevel(level_name);
+    }
 }
 
 void LevelScene::onUpdate(float delta)

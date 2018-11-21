@@ -32,7 +32,7 @@ sp::io::Keybinding escape_key{"exit", "Escape"};
 int main(int argc, char** argv)
 {
     sp::P<sp::Engine> engine = new sp::Engine();
-
+    
     //Create resource providers, so we can load things.
     new sp::io::DirectoryResourceProvider("resources");
     new sp::io::DirectoryResourceProvider("photos");
