@@ -7,6 +7,7 @@
 #include "laser.h"
 #include "pushLaser.h"
 #include "physicsObject.h"
+#include "bomb.h"
 #include "trigger.h"
 #include "timer.h"
 #include "levelLoader.h"
@@ -95,6 +96,11 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 else if (object["type"] == "OBJECT")
                 {
                     obj = new PhysicsObject(root, object["name"].string_value());
+                    obj->setPosition(position);
+                }
+                else if (object["type"] == "BOMB")
+                {
+                    obj = new Bomb(root, object["name"].string_value());
                     obj->setPosition(position);
                 }
                 else if (object["type"] == "DOOR")

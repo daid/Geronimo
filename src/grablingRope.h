@@ -18,6 +18,7 @@ private:
     sp::P<sp::Node> owner;
     sp::P<sp::collision::RopeJoint2D> rope_joint;
     sp::P<sp::Node> target;
+    bool attached = false;
     sp::Vector2d target_local_location;
 };
 

@@ -48,7 +48,7 @@ void GrablingRope::onUpdate(float delta)
 
 void GrablingRope::onFixedUpdate()
 {
-    if (!owner)
+    if (!owner || (attached && !target))
     {
         delete this;
         return;
@@ -66,6 +66,7 @@ void GrablingRope::onCollision(sp::CollisionInfo& info)
         removeCollisionShape();
         
         target = info.other;
+        attached = true;
         target_local_location = (info.position - info.other->getPosition2D()).rotate(-target->getRotation2D());
         rope_joint = new sp::collision::RopeJoint2D(owner, sp::Vector2d(0, 0), target, target_local_location, 10.0);
     }
