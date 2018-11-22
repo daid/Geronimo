@@ -27,6 +27,7 @@ private:
     int trigger_level = 1; //Amount of active triggers required for this triggerable to activate.
     sp::string trigger_name;
     bool once = false;
+    bool inverted = false;
 };
 
 #endif//TRIGGER_H

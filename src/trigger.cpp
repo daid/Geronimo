@@ -54,7 +54,7 @@ void Trigger::onFixedUpdate()
         trigger_delay = 30;
         return;
     }
-    
+
     if (trigger_delay > 0)
     {
         trigger_delay--;

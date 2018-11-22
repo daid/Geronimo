@@ -7,7 +7,12 @@ void TriggerableNode::triggerAdd()
     trigger_counter++;
 
     if (trigger_counter == trigger_level)
-        onTrigger();
+    {
+        if (inverted)
+            onUnTrigger();
+        else
+            onTrigger();
+    }
 }
 
 void TriggerableNode::triggerSubstract()
@@ -16,7 +21,12 @@ void TriggerableNode::triggerSubstract()
         return;
     
     if (trigger_counter == trigger_level)
-        onUnTrigger();
+    {
+        if (inverted)
+            onTrigger();
+        else
+            onUnTrigger();
+    }
     trigger_counter--;
 }
 
@@ -26,6 +36,12 @@ void TriggerableNode::setProperty(sp::string name, sp::string value)
         once = sp::stringutil::convert::toBool(value);
     else if (name == "trigger_level")
         trigger_level = sp::stringutil::convert::toInt(value);
+    else if (name == "trigger_invert")
+    {
+        inverted = sp::stringutil::convert::toBool(value);
+        if (inverted)
+            onTrigger();
+    }
     else
         LevelObject::setProperty(name, value);
 }
