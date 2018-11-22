@@ -152,7 +152,7 @@ void LevelScene::onFixedUpdate()
     {
         exitLevel();
     }
-    if (controls[0].restart.getDown() || controls[1].restart.getDown())
+    if ((controls[0].restart.getDown() || controls[1].restart.getDown()) && controls[0].restart.get() && controls[1].restart.get())
     {
         loadLevel(level_name);
     }
