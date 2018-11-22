@@ -43,9 +43,9 @@ Controls::Controls(int index)
         secondary_action.setKey("e");
         
         unknown2.setKey("r");
-        restart.setKey("t");
-        unknown4.setKey("y");
-        unknown5.setKey("u");
+        restart.setKey("f");
+        unknown4.setKey("t");
+        unknown5.setKey("g");
         
         start.setKey("2");
     }
