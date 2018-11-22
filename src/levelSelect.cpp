@@ -92,9 +92,18 @@ LevelSelect::LevelSelect()
         sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1), sp::string(n + 1));
         next->setPosition(sp::Vector2d(n * 30, (n % 2) * -10));
         if (prev)
+        {
             new LevelNodeLink(prev, next);
+        }
         else
+        {
             selection = next;
+
+            sp::P<LevelNode> level_x = new LevelNode(getRoot(), "X", "X");
+            level_x->setPosition(sp::Vector2d(-70, -30));
+            new LevelNodeLink(level_x, selection);
+        }
+
         prev = next;
         for(char c='b'; sp::io::ResourceProvider::get("levels/level" + sp::string(n+1) + sp::string(c) + ".json") != nullptr; c++)
         {

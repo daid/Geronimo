@@ -25,15 +25,6 @@ static sp::P<sp::Node> addDecoration(sp::P<sp::Node> root, sp::Vector2d position
 void loadLevel(sp::P<sp::Node> root, sp::string name)
 {
     {
-        for(auto obj : root->getChildren())
-            delete obj;
-        level_info.fuel_ticks_used = 0;
-        level_info.time_ticks = 0;
-        level_info.center_point_gravity = false;
-
-        level_info.fuel_trophy = 6000;
-        level_info.time_trophy = 10 * 60 * 60;
-
         FILE* f = fopen((name + ".trophy").c_str(), "rb");
         if (f)
         {

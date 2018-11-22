@@ -7,6 +7,7 @@
 #include "physicsObject.h"
 #include "trigger.h"
 #include "levelLoader.h"
+#include "levelGenerator.h"
 
 #include <json11/json11.hpp>
 #include <sp2/random.h>
@@ -36,11 +37,28 @@ void LevelScene::loadLevel(sp::string name)
     end_level_countdown = 60;
     level_info.target_areas.clear();
 
+    level_info.fuel_ticks_used = 0;
+    level_info.time_ticks = 0;
+    level_info.center_point_gravity = false;
+
+    level_info.fuel_trophy = 6000;
+    level_info.time_trophy = 10 * 60 * 60;
+
+    for(auto obj : getRoot()->getChildren())
+        delete obj;
+
     gui->show();
     gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
     gui->getWidgetWithID("CAMERA_PREVIEW")->hide();
 
-    ::loadLevel(getRoot(), name);
+    if (name == "X")
+    {
+        new LevelGenerator(getRoot());
+    }
+    else
+    {
+        ::loadLevel(getRoot(), name);
+    }
 
     for(auto obj : getRoot()->getChildren())
     {
