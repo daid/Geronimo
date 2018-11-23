@@ -13,7 +13,7 @@ LevelGenerator::LevelGenerator(sp::P<sp::Node> parent)
 {
     level_info.camera_view_range = sp::Vector2d(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     
-    for(int n=0; n<1; n++)
+    for(int n=0; n<2; n++)
     {
         sp::P<Spaceship> spaceship = new Spaceship(parent);
         spaceship->setPosition(sp::Vector2d(n * 10, 0));
