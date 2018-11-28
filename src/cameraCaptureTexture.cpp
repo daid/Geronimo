@@ -29,7 +29,17 @@ void CameraCaptureTexture::close()
 void CameraCaptureTexture::bind()
 {
     if (capture)
-        setImage(capture->getFrame());
+    {
+        if (capture_delay)
+        {
+            capture_delay--;
+        }
+        else
+        {
+            setImage(capture->getFrame());
+            capture_delay = 2;
+        }
+    }
     sp::OpenGLTexture::bind();
 }
 
