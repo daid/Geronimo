@@ -118,6 +118,7 @@ LevelSelect::LevelSelect()
     gui = sp::gui::Loader::load("gui/level_select_hud.gui", "HUD");
     gui->getWidgetWithID("FUEL")->getWidgetWithID("PHOTO")->setRotation(-90);
     gui->getWidgetWithID("TIME")->getWidgetWithID("PHOTO")->setRotation(-90);
+    gui->getWidgetWithID("DEPTH")->getWidgetWithID("PHOTO")->setRotation(-90);
 
     camera = new sp::Camera(getRoot());
     camera->setOrtographic(60);
@@ -171,4 +172,6 @@ void LevelSelect::updateTrophys()
     gui->getWidgetWithID("FUEL")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.fuel.png");
     gui->getWidgetWithID("TIME")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.time.png") != nullptr);
     gui->getWidgetWithID("TIME")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.time.png");
+    gui->getWidgetWithID("DEPTH")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.depth.png") != nullptr);
+    gui->getWidgetWithID("DEPTH")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.depth.png");
 }

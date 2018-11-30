@@ -14,6 +14,10 @@
             @ref: TROPHY type=time
             size: 60, 45
         }
+        [DEPTH] {
+            @ref: TROPHY type=depth
+            size: 60, 45
+        }
     }
 }
 

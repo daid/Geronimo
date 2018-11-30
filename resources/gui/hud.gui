@@ -10,6 +10,9 @@
         [TIME] {
             @ref: RECORD_BAR type=time
         }
+        [DEPTH] {
+            @ref: RECORD_BAR type=depth
+        }
     }
     [BIG_ASS_TROPHY] {
         type: image

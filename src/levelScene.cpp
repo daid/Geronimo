@@ -43,6 +43,8 @@ void LevelScene::loadLevel(sp::string name)
 
     level_info.fuel_trophy = 6000;
     level_info.time_trophy = 10 * 60 * 60;
+    level_info.depth_trophy = 10.0;
+    level_info.trophy_mode = LevelInfo::TrophyMode::Normal;
 
     for(auto obj : getRoot()->getChildren())
         delete obj;
@@ -54,6 +56,7 @@ void LevelScene::loadLevel(sp::string name)
     if (name == "X")
     {
         new LevelGenerator(getRoot());
+        level_info.trophy_mode = LevelInfo::TrophyMode::Depth;
     }
     else
     {
@@ -156,7 +159,24 @@ void LevelScene::onFixedUpdate()
                 }
                 else
                 {
-                    levelFailed();
+                    if (level_info.trophy_mode == LevelInfo::TrophyMode::Depth)
+                    {
+                        float depth = getCamera()->getPosition2D().length();
+                        if (depth > level_info.depth_trophy)
+                        {
+                            level_info.depth_trophy = depth;
+                            level_already_finished = true;
+                            earnTrophyA(4);
+                        }
+                        else
+                        {
+                            levelFailed();
+                        }
+                    }
+                    else
+                    {
+                        levelFailed();
+                    }
                 }
             }
         }
@@ -181,14 +201,31 @@ void LevelScene::onUpdate(float delta)
     if (level_already_finished)
         return;
 
-    float fuel = float(level_info.fuel_ticks_used) / float(level_info.fuel_trophy);
-    float time = float(level_info.time_ticks) / float(level_info.time_trophy);
-    gui->getWidgetWithID("FUEL")->getWidgetWithID("BAR")->setAttribute("value", sp::string(fuel / 2.0, 5));
-    gui->getWidgetWithID("FUEL")->getWidgetWithID("TROPHY")->setVisible(fuel <= 1.0);
-    gui->getWidgetWithID("FUEL")->getWidgetWithID("FAILED")->setVisible(fuel > 1.0);
-    gui->getWidgetWithID("TIME")->getWidgetWithID("BAR")->setAttribute("value", sp::string(time / 2.0, 5));
-    gui->getWidgetWithID("TIME")->getWidgetWithID("TROPHY")->setVisible(time <= 1.0);
-    gui->getWidgetWithID("TIME")->getWidgetWithID("FAILED")->setVisible(time > 1.0);
+    switch (level_info.trophy_mode)
+    {
+    case LevelInfo::TrophyMode::Normal: {
+        float fuel = float(level_info.fuel_ticks_used) / float(level_info.fuel_trophy);
+        float time = float(level_info.time_ticks) / float(level_info.time_trophy);
+        gui->getWidgetWithID("FUEL")->show();
+        gui->getWidgetWithID("FUEL")->getWidgetWithID("BAR")->setAttribute("value", sp::string(fuel / 2.0, 5));
+        gui->getWidgetWithID("FUEL")->getWidgetWithID("TROPHY")->setVisible(fuel <= 1.0);
+        gui->getWidgetWithID("FUEL")->getWidgetWithID("FAILED")->setVisible(fuel > 1.0);
+        gui->getWidgetWithID("TIME")->show();
+        gui->getWidgetWithID("TIME")->getWidgetWithID("BAR")->setAttribute("value", sp::string(time / 2.0, 5));
+        gui->getWidgetWithID("TIME")->getWidgetWithID("TROPHY")->setVisible(time <= 1.0);
+        gui->getWidgetWithID("TIME")->getWidgetWithID("FAILED")->setVisible(time > 1.0);
+        gui->getWidgetWithID("DEPTH")->hide();
+        }break;
+    case LevelInfo::TrophyMode::Depth: {
+        float depth = getCamera()->getPosition2D().length();
+        gui->getWidgetWithID("FUEL")->hide();
+        gui->getWidgetWithID("TIME")->hide();
+        gui->getWidgetWithID("DEPTH")->show();
+        gui->getWidgetWithID("DEPTH")->getWidgetWithID("BAR")->setAttribute("value", sp::string(depth / (level_info.depth_trophy * 2), 5));
+        gui->getWidgetWithID("DEPTH")->getWidgetWithID("TROPHY")->setVisible(depth >= level_info.depth_trophy);
+        gui->getWidgetWithID("DEPTH")->getWidgetWithID("FAILED")->setVisible(depth < level_info.depth_trophy);
+        }break;
+    }
 }
 
 bool LevelScene::inTargetArea(sp::Vector2d position)
@@ -215,7 +252,6 @@ void LevelScene::levelFinished()
     
     if (trophy)
     {
-        end_level_countdown = 60 * 3;
         earnTrophyA(trophy);
     }
     else
@@ -239,11 +275,20 @@ void LevelScene::levelFailed()
 void LevelScene::earnTrophyA(int flags)
 {
     trophy_earned_flags = flags;
+    end_level_countdown = 60 * 3;
     camera_capture_texture->open(0);
 
     FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
-    fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
-    fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+    switch (level_info.trophy_mode)
+    {
+    case LevelInfo::TrophyMode::Normal:
+        fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
+        fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+        break;
+    case LevelInfo::TrophyMode::Depth:
+        fwrite(&level_info.depth_trophy, sizeof(level_info.depth_trophy), 1, f);
+        break;
+    }
     fclose(f);
     
     gui->getWidgetWithID("BIG_ASS_TROPHY")->show();
@@ -289,6 +334,11 @@ void LevelScene::earnTrophyB(int flags)
     {
         photo.saveToFile("photos/" + level_name + ".trophy.time.png");
         sp::texture_manager.forceRefresh(level_name + ".trophy.time.png");
+    }
+    if (flags & 4)
+    {
+        photo.saveToFile("photos/" + level_name + ".trophy.depth.png");
+        sp::texture_manager.forceRefresh(level_name + ".trophy.depth.png");
     }
 }
 

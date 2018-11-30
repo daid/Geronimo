@@ -5,6 +5,7 @@
 #include "lineNodeBuilder.h"
 
 #include <sp2/assert.h>
+#include <stdio.h>
 #include "clipper/clipper.hpp"
 
 
@@ -12,7 +13,14 @@ LevelGenerator::LevelGenerator(sp::P<sp::Node> parent)
 : sp::Node(parent)
 {
     level_info.camera_view_range = sp::Vector2d(std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-    
+
+    FILE* f = fopen("X.trophy", "rb");
+    if (f)
+    {
+        fread(&level_info.depth_trophy, sizeof(level_info.depth_trophy), 1, f);
+        fclose(f);
+    }
+
     for(int n=0; n<2; n++)
     {
         sp::P<Spaceship> spaceship = new Spaceship(parent);

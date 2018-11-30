@@ -52,6 +52,13 @@ public:
     
     int fuel_trophy;
     int time_trophy;
+    float depth_trophy;
+
+    enum class TrophyMode
+    {
+        Normal,
+        Depth,
+    } trophy_mode;
 
     sp::Vector2d camera_view_range;
     std::vector<sp::Rect2d> target_areas; //TODO: Replace with with a better system
