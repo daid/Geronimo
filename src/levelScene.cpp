@@ -190,10 +190,6 @@ void LevelScene::onFixedUpdate()
     {
         exitLevel();
     }
-    if ((controls[0].restart.getDown() || controls[1].restart.getDown()) && controls[0].restart.get() && controls[1].restart.get())
-    {
-        loadLevel(level_name);
-    }
 }
 
 void LevelScene::onUpdate(float delta)
