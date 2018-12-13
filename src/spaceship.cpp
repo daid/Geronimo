@@ -89,9 +89,9 @@ void Spaceship::onFixedUpdate()
                 rope.destroy();
             }
         }
-        if (controls->restart.getDown() && controls->restart.get())
+        if (controls->self_destruct.getDown())
         {
-            LOG(Debug, "RESET SELF DESTRUCT");
+            LOG(Debug, "Initiating self destruct for player", controls->index);
             explode();
         }
     }
