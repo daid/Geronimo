@@ -89,6 +89,11 @@ void Spaceship::onFixedUpdate()
                 rope.destroy();
             }
         }
+        if (controls->self_destruct.getDown())
+        {
+            LOG(Debug, "Initiating self destruct for player", controls->index);
+            explode();
+        }
     }
     
     setLinearVelocity(velocity);
