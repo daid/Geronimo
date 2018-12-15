@@ -50,3 +50,31 @@ Controls::Controls(int index)
         start.setKey("2");
     }
 }
+
+KeyState KeyState::fromIO(const sp::io::Keybinding& key)
+{
+    KeyState result = KeyState(key.get(), key.getDown(), key.getUp(), key.getValue());
+    return result;
+}
+
+PlayerControlsState Controls::playerControlStateFromIO()
+{
+    PlayerControlsState result = PlayerControlsState();
+
+    result.up = KeyState::fromIO(up);
+    result.down = KeyState::fromIO(down);
+    result.left = KeyState::fromIO(left);
+    result.right= KeyState::fromIO(right);
+
+    result.primary_action = KeyState::fromIO(primary_action);
+    result.secondary_action = KeyState::fromIO(secondary_action);
+
+    result.unknown2 = KeyState::fromIO(unknown2);
+    result.self_destruct= KeyState::fromIO(self_destruct);
+    result.unknown5 = KeyState::fromIO(unknown4);
+    result.unknown4 = KeyState::fromIO(unknown5);
+
+    result.start = KeyState::fromIO(start);
+
+    return result;
+}

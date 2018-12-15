@@ -3,16 +3,16 @@
 
 #include "levelObject.h"
 #include <sp2/scene/particleEmitter.h>
+#include "controls.h"
 
-class Controls;
 class GrablingRope;
 class Spaceship : public LevelObject
 {
 public:
     Spaceship(sp::P<sp::Node> parent);
-    
-    void setControls(Controls* controls);
-    
+
+    void setControlState(PlayerControlsState controlState);
+
     virtual void onFixedUpdate() override;
     virtual void onUpdate(float delta) override;
     
@@ -24,16 +24,19 @@ public:
     bool hadActivity() { return activity; }
     
     void setIcon(sp::string name);
+    void setIndex(int idx);
     
     sp::P<sp::Node> icon;
+    int index;
 private:
-    Controls* controls = nullptr;
+    PlayerControlsState controlState;
 
     sp::Vector2d old_velocity;
     sp::P<sp::ParticleEmitter> engine_emitter;
     bool alive = true;
     bool activity = false;
     sp::P<GrablingRope> rope;
+
 };
 
 

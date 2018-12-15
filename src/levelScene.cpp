@@ -81,11 +81,19 @@ void LevelScene::onFixedUpdate()
 {
     level_info.time_ticks += 1;
 
+    ControlsState controlsState;
+    if(level_info.time_ticks >= 1) { // Work around the fact that the first frame all buttons seem pressed
+        controlsState.players[0] = controls[0].playerControlStateFromIO();
+        controlsState.players[1] = controls[1].playerControlStateFromIO();
+    }
+
     sp::Vector2d view_position;
     bool alive = false;
     bool in_target = true;
     for(auto player : players)
     {
+        player->setControlState(controlsState.players[player->index]);
+
         sp::Vector2d position = player->getPosition2D();
         view_position += position;
         if (player->isAlive())

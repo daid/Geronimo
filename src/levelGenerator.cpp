@@ -25,7 +25,6 @@ LevelGenerator::LevelGenerator(sp::P<sp::Node> parent)
     {
         sp::P<Spaceship> spaceship = new Spaceship(parent);
         spaceship->setPosition(sp::Vector2d(n * 10, 0));
-        spaceship->setControls(&controls[n]);
     }
     
     map_index_min = 0;
