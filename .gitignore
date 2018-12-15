@@ -1,0 +1,5 @@
+.idea/
+*.trophy
+_build/
+cmake-build-debug/
+cmake-build-release/
