@@ -73,7 +73,7 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                     int index = sp::stringutil::convert::toInt(object["name"].string_value());
                     sp::P<Spaceship> spaceship = new Spaceship(root);
                     spaceship->setPosition(position);
-                    spaceship->setControls(&controls[index]);
+                    spaceship->setIndex(index);
                     spaceship->icon = addIcon(root, position, "gamepad" + sp::string(index + 1));
                     obj = spaceship;
                 }

@@ -20,19 +20,9 @@ Spaceship::Spaceship(sp::P<sp::Node> parent)
     engine_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
 }
 
-void Spaceship::setControls(Controls* controls)
+void Spaceship::setControlState(PlayerControlsState controlState)
 {
-    this->controls = controls;
-    if (controls)
-    {
-        switch(controls->index)
-        {
-        case 0: render_data.color = sp::Color(0.8, 0.8, 1); break;
-        case 1: render_data.color = sp::Color(1, 0.8, 0.8); break;
-        }
-    }
-    else
-        render_data.color = sp::Color(1, 1, 1);
+    this->controlState = controlState;
 }
 
 void Spaceship::onFixedUpdate()
@@ -44,12 +34,12 @@ void Spaceship::onFixedUpdate()
     sp::Vector2d velocity = getLinearVelocity2D();
     velocity += level_info.getGravityAt(getPosition2D());
 
-    if (controls && alive)
+    if (alive)
     {
-        float turn = controls->left.getValue() - controls->right.getValue();
+        float turn = controlState.left.value  - controlState.right.value;
         angular_velocity += turn * turn_speed;
         
-        if (controls->primary_action.get())
+        if (controlState.primary_action.pressed)
         {
             activity = true;
             sp::Vector2d trust_vector = sp::Vector2d(0, trust_speed).rotate(getRotation2D());
@@ -75,8 +65,8 @@ void Spaceship::onFixedUpdate()
 
             level_info.fuel_ticks_used += 1;
         }
-        
-        if (controls->secondary_action.getDown())
+
+        if (controlState.secondary_action.down)
         {
             if (!rope)
             {
@@ -89,9 +79,9 @@ void Spaceship::onFixedUpdate()
                 rope.destroy();
             }
         }
-        if (controls->self_destruct.getDown())
+        if (controlState.self_destruct.down)
         {
-            LOG(Debug, "Initiating self destruct for player", controls->index);
+            LOG(Debug, "Initiating self destruct for player", index);
             explode();
         }
     }
@@ -137,6 +127,19 @@ void Spaceship::setIcon(sp::string name)
     }
 }
 
+void Spaceship::setIndex(int idx)
+{
+    this->index = idx;
+
+    switch(idx)
+    {
+        case 0: render_data.color = sp::Color(0.8, 0.8, 1); break;
+        case 1: render_data.color = sp::Color(1, 0.8, 0.8); break;
+        default: render_data.color = sp::Color(1, 1, 1); break;
+    }
+
+}
+
 void Spaceship::onCollision(sp::CollisionInfo& info)
 {
     if (!alive)
@@ -159,8 +162,7 @@ void Spaceship::explode()
     new Explosion(getParent(), getPosition2D(), getLinearVelocity2D());
     engine_emitter->setParent(getParent());
     engine_emitter->auto_destroy = true;
-    
-    controls = nullptr;
+
     render_data.color.a = 0.5;
     alive = false;
 }
