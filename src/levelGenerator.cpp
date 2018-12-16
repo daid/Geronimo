@@ -25,7 +25,11 @@ LevelGenerator::LevelGenerator(sp::P<sp::Node> parent)
     {
         sp::P<Spaceship> spaceship = new Spaceship(parent);
         spaceship->setPosition(sp::Vector2d(n * 10, 0));
+        spaceship->setIndex(n);
+        players.add(spaceship);
     }
+
+    fixed_frame_count = 0;
     
     map_index_min = 0;
     map_index_max = 3;
@@ -50,6 +54,13 @@ void LevelGenerator::onFixedUpdate()
     const float spawn_range = 150;
     const float despawn_range = 300;
     sp::Vector2f camera_position = sp::Vector2f(getScene()->getCamera()->getPosition2D());
+
+    if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
+    {
+         for(auto player : players) {
+            player->setControlState(controls[player->index].playerControlStateFromIO());
+        }
+    }
 
     if ((entry_points[map_index_max] - camera_position).length() < spawn_range)
     {
@@ -77,6 +88,8 @@ void LevelGenerator::onFixedUpdate()
         map_index_min += 1;
         buildLevel(map_index_min, map_index_max);
     }
+
+    fixed_frame_count++;
 }
 
 std::vector<sp::Vector2f> LevelGenerator::getMapSection(unsigned int index)
