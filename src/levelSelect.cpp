@@ -1,3 +1,5 @@
+#include <cstdio>
+
 #include "levelSelect.h"
 #include "main.h"
 #include "lineNodeBuilder.h"
@@ -152,6 +154,25 @@ void LevelSelect::onFixedUpdate()
             level_scene->enable();
             gui->hide();
             disable();
+        }
+
+        if (controls[n].unknown5.getDown() || controls[n].unknown4.getDown())
+        {
+            sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
+            std::string replay_file = controls[n].unknown5.getDown() ? (selection->level_name + "-fuel.replay") :
+                    (selection->level_name + "-time.replay");
+
+            FILE* f_existance_test = fopen(replay_file.c_str(), "r");
+            if(f_existance_test)
+            {
+                fclose(f_existance_test);
+                level_scene->loadLevel(selection->level_name, true, replay_file);
+                level_scene->enable();
+                gui->hide();
+                disable();
+            }
+
+
         }
     }
     if (old_selection != selection)

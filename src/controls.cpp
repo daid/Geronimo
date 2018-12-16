@@ -1,4 +1,5 @@
 #include "controls.h"
+#include <cstdint>
 
 Controls::Controls(int index)
 : index(index)
@@ -57,6 +58,19 @@ KeyState KeyState::fromIO(const sp::io::Keybinding& key)
     return result;
 }
 
+void KeyState::writeToFile(FILE *f) {
+    fprintf(f, "%d,%d,%d,%a,", pressed, down, up, value);
+}
+
+bool KeyState::readFromFile(FILE *f, KeyState& result) {
+    int n_read = fscanf(f, "%d,%d,%d,%a,", &result.pressed, &result.down, &result.up, &result.value);
+    if(n_read != 4) {
+        return false;
+    }
+
+    return true;
+}
+
 PlayerControlsState Controls::playerControlStateFromIO()
 {
     PlayerControlsState result = PlayerControlsState();
@@ -77,4 +91,52 @@ PlayerControlsState Controls::playerControlStateFromIO()
     result.start = KeyState::fromIO(start);
 
     return result;
+}
+
+void PlayerControlsState::writeToFile(FILE *f)
+{
+    up.writeToFile(f);
+    down.writeToFile(f);
+    left.writeToFile(f);
+    right.writeToFile(f);
+    primary_action.writeToFile(f);
+    secondary_action.writeToFile(f);
+    unknown2.writeToFile(f);
+    self_destruct.writeToFile(f);
+    unknown5.writeToFile(f);
+    unknown4.writeToFile(f);
+    start.writeToFile(f);
+}
+
+bool PlayerControlsState::readFromFile(FILE *f, PlayerControlsState& result)
+{
+    if(!KeyState::readFromFile(f, result.up))
+        return false;
+    KeyState::readFromFile(f, result.down);
+    KeyState::readFromFile(f, result.left);
+    KeyState::readFromFile(f, result.right);
+    KeyState::readFromFile(f, result.primary_action);
+    KeyState::readFromFile(f, result.secondary_action);
+    KeyState::readFromFile(f, result.unknown2);
+    KeyState::readFromFile(f, result.self_destruct);
+    KeyState::readFromFile(f, result.unknown5);
+    KeyState::readFromFile(f, result.unknown4);
+    KeyState::readFromFile(f, result.start);
+
+    return true;
+}
+
+void ControlsState::writeToFile(FILE *f)
+{
+    players[0].writeToFile(f);
+    players[1].writeToFile(f);
+}
+
+bool ControlsState::readFromFile(FILE *f, ControlsState& result)
+{
+    if(!PlayerControlsState::readFromFile(f, result.players[0]))
+        return false;
+    PlayerControlsState::readFromFile(f, result.players[1]);
+
+    return true;
 }
