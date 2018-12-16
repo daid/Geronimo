@@ -30,7 +30,8 @@ LevelScene::LevelScene()
     
     camera_capture_texture = new CameraCaptureTexture();
 
-    replay_controls_buffer = std::vector<ControlsState>();
+    //Allocate a big replay buffer so during gameplay we don't have to ask for more to prevent stuttering
+    replay_controls_buffer = std::vector<ControlsState>((size_t)(sp::Engine::fixed_update_frequency * max_replay_time_sec));
 }
 
 void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file)
