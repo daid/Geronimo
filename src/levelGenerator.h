@@ -3,6 +3,7 @@
 
 #include <sp2/scene/node.h>
 #include <sp2/math/rect.h>
+#include "spaceship.h"
 #include <random>
 
 class LevelGenerator : public sp::Node
@@ -14,6 +15,10 @@ public:
 
 private:
     void buildLevel(int min_index, int max_index);
+
+    sp::PList<Spaceship> players;
+
+    int fixed_frame_count;
 
     std::vector<sp::Vector2f> getMapSection(unsigned int index);
     void combinePaths(std::vector<std::vector<sp::Vector2f>>& output, const std::vector<sp::Vector2f>& input);
