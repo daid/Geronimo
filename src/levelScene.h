@@ -6,6 +6,8 @@
 #include <sp2/math/rect.h>
 #include <sp2/graphics/gui/widget/widget.h>
 #include "cameraCaptureTexture.h"
+#include "controls.h"
+#include <vector>
 
 class Spaceship;
 class LevelScene : public sp::Scene
@@ -13,7 +15,7 @@ class LevelScene : public sp::Scene
 public:
     LevelScene();
     
-    void loadLevel(sp::string name);
+    void loadLevel(sp::string name, bool replay=false, std::string replay_file="");
     
     sp::P<sp::Node> addIcon(sp::Vector2d position, sp::string name);
     
@@ -41,6 +43,13 @@ private:
     sp::P<sp::gui::Widget> gui;
     
     CameraCaptureTexture* camera_capture_texture;
+
+    const static int max_replay_time_sec = 10*60; //Max number of seconds of a replay file
+    bool replay;
+    std::vector<ControlsState> replay_controls_buffer;
+
+    void loadReplay(std::string filepath);
+    static void saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer);
 };
 
 class LevelInfo

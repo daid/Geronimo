@@ -15,6 +15,7 @@
 #include <sp2/graphics/textureManager.h>
 #include <sp2/graphics/gui/loader.h>
 #include <sp2/io/cameraCapture.h>
+#include <sp2/engine.h>
 
 
 LevelInfo level_info;
@@ -28,9 +29,11 @@ LevelScene::LevelScene()
     disable();
     
     camera_capture_texture = new CameraCaptureTexture();
+
+    replay_controls_buffer = std::vector<ControlsState>();
 }
 
-void LevelScene::loadLevel(sp::string name)
+void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file)
 {
     level_name = name;
     level_already_finished = false;
@@ -72,6 +75,16 @@ void LevelScene::loadLevel(sp::string name)
             target_objects.add(po);
     }
 
+    this->replay = replay;
+    if(replay)
+    {
+        loadReplay(replay_file);
+    }
+    else
+    {
+        replay_controls_buffer.clear();
+    }
+
     camera = new sp::Camera(getRoot());
     camera->setOrtographic(60);
     setDefaultCamera(camera);
@@ -79,12 +92,40 @@ void LevelScene::loadLevel(sp::string name)
 
 void LevelScene::onFixedUpdate()
 {
-    level_info.time_ticks += 1;
-
     ControlsState controlsState;
-    if(level_info.time_ticks >= 1) { // Work around the fact that the first frame all buttons seem pressed
-        controlsState.players[0] = controls[0].playerControlStateFromIO();
-        controlsState.players[1] = controls[1].playerControlStateFromIO();
+
+    if(!replay)
+    {
+        if (level_info.time_ticks > 0)  // Work around the fact that the first frame all buttons seem pressed
+        {
+            for(auto player : players) {
+                controlsState.players[player->index] = controls[player->index].playerControlStateFromIO();
+            }
+        }
+
+        // Make sure we don't record forever
+        if (replay_controls_buffer.size() < sp::Engine::fixed_update_frequency*max_replay_time_sec)
+        {
+            replay_controls_buffer.push_back(controlsState);
+        }
+    } else {
+
+        if(level_info.time_ticks < replay_controls_buffer.size()) {
+            controlsState = replay_controls_buffer[level_info.time_ticks];
+        }
+
+        //Abort playback
+        for(auto player : players)
+        {
+            if(controls[player->index].primary_action.getDown() || controls[player->index].secondary_action.getDown())
+            {
+                for(auto p : players)
+                {
+                    p->explode();
+                }
+            }
+        }
+
     }
 
     sp::Vector2d view_position;
@@ -198,6 +239,8 @@ void LevelScene::onFixedUpdate()
     {
         exitLevel();
     }
+
+    level_info.time_ticks += 1;
 }
 
 void LevelScene::onUpdate(float delta)
@@ -254,9 +297,19 @@ void LevelScene::levelFinished()
         trophy |= 2;
     }
     
-    if (trophy)
+    if (trophy && !replay)
     {
         earnTrophyA(trophy);
+
+        if(trophy & 1)
+        {
+            saveReplay(level_name + "-fuel.replay", replay_controls_buffer);
+        }
+
+        if(trophy & 2)
+        {
+            saveReplay(level_name + "-time.replay", replay_controls_buffer);
+        }
     }
     else
     {
@@ -270,10 +323,34 @@ void LevelScene::levelFailed()
     for(auto player : players)
         activity = activity || player->hadActivity();
     
-    if (activity)
+    if (activity && !replay)
         loadLevel(level_name);
     else
         exitLevel();
+}
+
+
+void LevelScene::loadReplay(std::string filepath)
+{
+    replay_controls_buffer.clear();
+
+    FILE* replay_fh = fopen(filepath.c_str(), "r");
+    ControlsState frame;
+    while(ControlsState::readFromFile(replay_fh, frame))
+    {
+        replay_controls_buffer.push_back(frame);
+    }
+}
+
+
+void LevelScene::saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer)
+{
+    FILE* f = fopen(filepath.c_str(), "w");
+    for(auto frame : replay_buffer)
+    {
+        frame.writeToFile(f);
+    }
+    fclose(f);
 }
 
 void LevelScene::earnTrophyA(int flags)
