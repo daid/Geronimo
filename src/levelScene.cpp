@@ -84,6 +84,7 @@ void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file
     {
         replay_controls_buffer.clear();
     }
+    fixed_frame_count = 0;
 
     camera = new sp::Camera(getRoot());
     camera->setOrtographic(60);
@@ -92,11 +93,13 @@ void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file
 
 void LevelScene::onFixedUpdate()
 {
+    level_info.time_ticks += 1;
+
     ControlsState controlsState;
 
     if(!replay)
     {
-        if (level_info.time_ticks > 0)  // Work around the fact that the first frame all buttons seem pressed
+        if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
         {
             for(auto player : players) {
                 controlsState.players[player->index] = controls[player->index].playerControlStateFromIO();
@@ -110,8 +113,8 @@ void LevelScene::onFixedUpdate()
         }
     } else {
 
-        if(level_info.time_ticks < replay_controls_buffer.size()) {
-            controlsState = replay_controls_buffer[level_info.time_ticks];
+        if(fixed_frame_count < replay_controls_buffer.size()) {
+            controlsState = replay_controls_buffer[fixed_frame_count];
         }
 
         //Abort playback
@@ -240,7 +243,7 @@ void LevelScene::onFixedUpdate()
         exitLevel();
     }
 
-    level_info.time_ticks += 1;
+    fixed_frame_count += 1;
 }
 
 void LevelScene::onUpdate(float delta)
