@@ -59,16 +59,21 @@ KeyState KeyState::fromIO(const sp::io::Keybinding& key)
 }
 
 void KeyState::writeToFile(FILE *f) {
-    fprintf(f, "%d,%d,%d,%a,", pressed, down, up, value);
+    int flags = (pressed ? 1 : 0) | (down ? 2 : 0) | (up ? 4 : 0);
+    fwrite(&flags, 1, 1, f);
+    fwrite(&value, sizeof(value), 1, f);
 }
 
 bool KeyState::readFromFile(FILE *f, KeyState& result) {
-    int n_read = fscanf(f, "%d,%d,%d,%a,", &result.pressed, &result.down, &result.up, &result.value);
-    if(n_read != 4) {
-        return false;
-    }
+    int flags;
+    size_t read_n = fread(&flags, 1, 1, f);
+    result.pressed = (bool)(flags & 1);
+    result.down = (bool)(flags & 2);
+    result.up = (bool)(flags & 3);
 
-    return true;
+    read_n += fread(&result.value, sizeof(result.value), 1, f);
+
+    return read_n == 2;
 }
 
 PlayerControlsState Controls::playerControlStateFromIO()
