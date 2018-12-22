@@ -44,10 +44,10 @@ private:
     
     CameraCaptureTexture* camera_capture_texture;
 
-    const static int max_replay_time_sec = 10*60; //Max number of seconds of a replay file
-    bool replay;
-    std::vector<ControlsState> replay_controls_buffer;
-    int fixed_frame_count;
+    const static int max_replay_time_sec = 10*60; //Max number of seconds to record for replay
+    bool replay; //True when scene should be playing back a replay
+    std::vector<ControlsState> replay_controls_buffer; //The buffer to playback from or record to
+    int fixed_frame_count; //Number of fixed updates since level loaded
 
     void loadReplay(std::string filepath);
     static void saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer);

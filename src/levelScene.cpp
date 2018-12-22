@@ -110,15 +110,17 @@ void LevelScene::onFixedUpdate()
         // Make sure we don't record forever
         if (replay_controls_buffer.size() < sp::Engine::fixed_update_frequency*max_replay_time_sec)
         {
+            //record controls state for this frame
             replay_controls_buffer.push_back(controlsState);
         }
     } else {
 
         if(fixed_frame_count < replay_controls_buffer.size()) {
+            //take the control state from the current frame
             controlsState = replay_controls_buffer[fixed_frame_count];
         }
 
-        //Abort playback
+        //Abort playback by user request
         for(auto player : players)
         {
             if(controls[player->index].primary_action.getDown() || controls[player->index].secondary_action.getDown())
@@ -344,17 +346,18 @@ void LevelScene::loadReplay(std::string filepath)
     {
         replay_controls_buffer.push_back(frame);
     }
+    fclose(replay_fh);
 }
 
 
 void LevelScene::saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer)
 {
-    FILE* f = fopen(filepath.c_str(), "w");
+    FILE* replay_fh = fopen(filepath.c_str(), "w");
     for(auto frame : replay_buffer)
     {
-        frame.writeToFile(f);
+        frame.writeToFile(replay_fh);
     }
-    fclose(f);
+    fclose(replay_fh);
 }
 
 void LevelScene::earnTrophyA(int flags)
