@@ -15,9 +15,10 @@ public:
     bool up;            //True for 1 update cycle when the key is released.
     float value;        //Returns a value in the range -1 to 1 for this keybinding. On keyboard keys this is always 0 or 1, but for joysticks this can be anywhere in the range -1.0 to 1.0
 
-    static KeyState fromIO(const sp::io::Keybinding& key);
     void writeToFile(FILE* f);
+
     static bool readFromFile(FILE* f, KeyState& result);
+    static KeyState fromIO(const sp::io::Keybinding& key);
 };
 
 class PlayerControlsState
@@ -27,18 +28,16 @@ public:
     KeyState down;
     KeyState left;
     KeyState right;
-
     KeyState primary_action;
     KeyState secondary_action;
-
     KeyState unknown2;
     KeyState self_destruct;
     KeyState unknown4;
     KeyState unknown5;
-
     KeyState start;
 
     void writeToFile(FILE* f);
+
     static bool readFromFile(FILE* f, PlayerControlsState& result);
 };
 
@@ -46,8 +45,8 @@ class ControlsState
 {
 public:
     PlayerControlsState players[2];
-
     void writeToFile(FILE* f);
+
     static bool readFromFile(FILE* f, ControlsState& result);
 };
 

@@ -18,7 +18,7 @@ private:
 
     sp::PList<Spaceship> players;
 
-    int fixed_frame_count;
+    int fixed_frame_count; //Number of fixed updates since level initialized
 
     std::vector<sp::Vector2f> getMapSection(unsigned int index);
     void combinePaths(std::vector<std::vector<sp::Vector2f>>& output, const std::vector<sp::Vector2f>& input);
