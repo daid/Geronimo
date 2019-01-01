@@ -156,10 +156,10 @@ void LevelSelect::onFixedUpdate()
             disable();
         }
 
-        if (controls[n].unknown5.getDown() || controls[n].unknown4.getDown())
+        if (controls[n].replay_fuel.getDown() || controls[n].replay_time.getDown())
         {
             sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
-            std::string replay_file = controls[n].unknown5.getDown() ? (selection->level_name + "-fuel.replay") :
+            std::string replay_file = controls[n].replay_fuel.getDown() ? (selection->level_name + "-fuel.replay") :
                     (selection->level_name + "-time.replay");
 
             FILE* f_existance_test = fopen(replay_file.c_str(), "r");

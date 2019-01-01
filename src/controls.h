@@ -32,8 +32,8 @@ public:
     KeyState secondary_action;
     KeyState unknown2;
     KeyState self_destruct;
-    KeyState unknown4;
-    KeyState unknown5;
+    KeyState replay_time;
+    KeyState replay_fuel;
     KeyState start;
 
     void writeToFile(FILE* f);
@@ -68,8 +68,8 @@ public:
 
     sp::io::Keybinding unknown2;
     sp::io::Keybinding self_destruct;
-    sp::io::Keybinding unknown4;
-    sp::io::Keybinding unknown5;
+    sp::io::Keybinding replay_time;
+    sp::io::Keybinding replay_fuel;
     
     sp::io::Keybinding start;
 };

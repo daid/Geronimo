@@ -11,7 +11,7 @@ class Spaceship : public LevelObject
 public:
     Spaceship(sp::P<sp::Node> parent);
 
-    void setControlState(PlayerControlsState controlState);
+    void setControlState(PlayerControlsState control_state);
 
     virtual void onFixedUpdate() override;
     virtual void onUpdate(float delta) override;
@@ -29,7 +29,7 @@ public:
     sp::P<sp::Node> icon;
     int index;
 private:
-    PlayerControlsState controlState;
+    PlayerControlsState control_state;
 
     sp::Vector2d old_velocity;
     sp::P<sp::ParticleEmitter> engine_emitter;

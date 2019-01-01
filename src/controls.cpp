@@ -11,8 +11,8 @@ Controls::Controls(int index)
 , secondary_action("secondary_action" + sp::string(index))
 , unknown2("unknown2_" + sp::string(index))
 , self_destruct("self_destruct_" + sp::string(index))
-, unknown4("unknown4_" + sp::string(index))
-, unknown5("unknown5_" + sp::string(index))
+, replay_time("replay_time_" + sp::string(index))
+, replay_fuel("replay_fuel_" + sp::string(index))
 , start("start" + sp::string(index))
 {
     if (index == 0)
@@ -27,8 +27,8 @@ Controls::Controls(int index)
         
         unknown2.setKey("x");
         self_destruct.setKey("c");
-        unknown4.setKey("v");
-        unknown5.setKey("b");
+        replay_time.setKey("v");
+        replay_fuel.setKey("b");
         
         start.setKey("1");
     }
@@ -45,8 +45,8 @@ Controls::Controls(int index)
         
         unknown2.setKey("r");
         self_destruct.setKey("f");
-        unknown4.setKey("t");
-        unknown5.setKey("g");
+        replay_time.setKey("t");
+        replay_fuel.setKey("g");
         
         start.setKey("2");
     }
@@ -58,13 +58,15 @@ KeyState KeyState::fromIO(const sp::io::Keybinding& key)
     return result;
 }
 
-void KeyState::writeToFile(FILE *f) {
+void KeyState::writeToFile(FILE *f)
+{
     int flags = (pressed ? 1 : 0) | (down ? 2 : 0) | (up ? 4 : 0);
     fwrite(&flags, 1, 1, f);
     fwrite(&value, sizeof(value), 1, f);
 }
 
-bool KeyState::readFromFile(FILE *f, KeyState& result) {
+bool KeyState::readFromFile(FILE *f, KeyState& result)
+{
     int flags;
     size_t read_n = fread(&flags, 1, 1, f);
     result.pressed = (bool)(flags & 1);
@@ -90,8 +92,8 @@ PlayerControlsState Controls::playerControlStateFromIO()
 
     result.unknown2 = KeyState::fromIO(unknown2);
     result.self_destruct= KeyState::fromIO(self_destruct);
-    result.unknown5 = KeyState::fromIO(unknown4);
-    result.unknown4 = KeyState::fromIO(unknown5);
+    result.replay_fuel = KeyState::fromIO(replay_time);
+    result.replay_time = KeyState::fromIO(replay_fuel);
 
     result.start = KeyState::fromIO(start);
 
@@ -108,8 +110,8 @@ void PlayerControlsState::writeToFile(FILE *f)
     secondary_action.writeToFile(f);
     unknown2.writeToFile(f);
     self_destruct.writeToFile(f);
-    unknown5.writeToFile(f);
-    unknown4.writeToFile(f);
+    replay_fuel.writeToFile(f);
+    replay_time.writeToFile(f);
     start.writeToFile(f);
 }
 
@@ -124,8 +126,8 @@ bool PlayerControlsState::readFromFile(FILE *f, PlayerControlsState& result)
     KeyState::readFromFile(f, result.secondary_action);
     KeyState::readFromFile(f, result.unknown2);
     KeyState::readFromFile(f, result.self_destruct);
-    KeyState::readFromFile(f, result.unknown5);
-    KeyState::readFromFile(f, result.unknown4);
+    KeyState::readFromFile(f, result.replay_fuel);
+    KeyState::readFromFile(f, result.replay_time);
     KeyState::readFromFile(f, result.start);
 
     return true;

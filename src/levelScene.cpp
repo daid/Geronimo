@@ -31,7 +31,7 @@ LevelScene::LevelScene()
     camera_capture_texture = new CameraCaptureTexture();
 
     //Allocate a big replay buffer so during gameplay we don't have to ask for more to prevent stuttering
-    replay_controls_buffer = std::vector<ControlsState>((size_t)(sp::Engine::fixed_update_frequency * max_replay_time_sec));
+    replay_controls_buffer.reserve((size_t)(sp::Engine::fixed_update_frequency * max_replay_time_sec));
 }
 
 void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file)
@@ -102,7 +102,8 @@ void LevelScene::onFixedUpdate()
     {
         if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
         {
-            for(auto player : players) {
+            for(auto player : players)
+            {
                 controlsState.players[player->index] = controls[player->index].playerControlStateFromIO();
             }
         }
@@ -113,9 +114,11 @@ void LevelScene::onFixedUpdate()
             //record controls state for this frame
             replay_controls_buffer.push_back(controlsState);
         }
-    } else {
-
-        if(fixed_frame_count < replay_controls_buffer.size()) {
+    }
+    else
+    {
+        if(fixed_frame_count < replay_controls_buffer.size())
+        {
             //take the control state from the current frame
             controlsState = replay_controls_buffer[fixed_frame_count];
         }
@@ -309,12 +312,12 @@ void LevelScene::levelFinished()
 
         if(trophy & 1)
         {
-            saveReplay(level_name + "-fuel.replay", replay_controls_buffer);
+            saveReplay(level_name + "-fuel.replay");
         }
 
         if(trophy & 2)
         {
-            saveReplay(level_name + "-time.replay", replay_controls_buffer);
+            saveReplay(level_name + "-time.replay");
         }
     }
     else
@@ -350,10 +353,10 @@ void LevelScene::loadReplay(std::string filepath)
 }
 
 
-void LevelScene::saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer)
+void LevelScene::saveReplay(std::string filepath)
 {
     FILE* replay_fh = fopen(filepath.c_str(), "w");
-    for(auto frame : replay_buffer)
+    for(auto frame : replay_controls_buffer)
     {
         frame.writeToFile(replay_fh);
     }
