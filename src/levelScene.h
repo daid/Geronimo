@@ -50,7 +50,7 @@ private:
     int fixed_frame_count; //Number of fixed updates since level loaded
 
     void loadReplay(std::string filepath);
-    static void saveReplay(std::string filepath, std::vector<ControlsState> replay_buffer);
+    void saveReplay(std::string filepath);
 };
 
 class LevelInfo

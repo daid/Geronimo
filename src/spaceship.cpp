@@ -20,9 +20,9 @@ Spaceship::Spaceship(sp::P<sp::Node> parent)
     engine_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
 }
 
-void Spaceship::setControlState(PlayerControlsState controlState)
+void Spaceship::setControlState(PlayerControlsState control_state)
 {
-    this->controlState = controlState;
+    this->control_state = control_state;
 }
 
 void Spaceship::onFixedUpdate()
@@ -36,10 +36,10 @@ void Spaceship::onFixedUpdate()
 
     if (alive)
     {
-        float turn = controlState.left.value  - controlState.right.value;
+        float turn = control_state.left.value  - control_state.right.value;
         angular_velocity += turn * turn_speed;
         
-        if (controlState.primary_action.pressed)
+        if (control_state.primary_action.pressed)
         {
             activity = true;
             sp::Vector2d trust_vector = sp::Vector2d(0, trust_speed).rotate(getRotation2D());
@@ -66,7 +66,7 @@ void Spaceship::onFixedUpdate()
             level_info.fuel_ticks_used += 1;
         }
 
-        if (controlState.secondary_action.down)
+        if (control_state.secondary_action.down)
         {
             if (!rope)
             {
@@ -79,7 +79,7 @@ void Spaceship::onFixedUpdate()
                 rope.destroy();
             }
         }
-        if (controlState.self_destruct.down)
+        if (control_state.self_destruct.down)
         {
             LOG(Debug, "Initiating self destruct for player", index);
             explode();

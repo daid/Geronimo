@@ -57,7 +57,8 @@ void LevelGenerator::onFixedUpdate()
 
     if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
     {
-         for(auto player : players) {
+        for(auto player : players)
+        {
             player->setControlState(controls[player->index].playerControlStateFromIO());
         }
     }
