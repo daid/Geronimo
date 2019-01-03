@@ -345,7 +345,7 @@ void LevelScene::loadReplay(std::string filepath)
 
     FILE* replay_fh = fopen(filepath.c_str(), "r");
     ControlsState frame;
-    while(ControlsState::readFromFile(replay_fh, frame))
+    while(frame.readFromFile(replay_fh))
     {
         replay_controls_buffer.push_back(frame);
     }
