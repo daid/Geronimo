@@ -65,15 +65,15 @@ void KeyState::writeToFile(FILE *f)
     fwrite(&value, sizeof(value), 1, f);
 }
 
-bool KeyState::readFromFile(FILE *f, KeyState& result)
+bool KeyState::readFromFile(FILE *f)
 {
     int flags;
     size_t read_n = fread(&flags, 1, 1, f);
-    result.pressed = (bool)(flags & 1);
-    result.down = (bool)(flags & 2);
-    result.up = (bool)(flags & 3);
+    pressed = (bool)(flags & 1);
+    down = (bool)(flags & 2);
+    up = (bool)(flags & 3);
 
-    read_n += fread(&result.value, sizeof(result.value), 1, f);
+    read_n += fread(&value, sizeof(value), 1, f);
 
     return read_n == 2;
 }
@@ -82,20 +82,17 @@ PlayerControlsState Controls::playerControlStateFromIO()
 {
     PlayerControlsState result = PlayerControlsState();
 
-    result.up = KeyState::fromIO(up);
-    result.down = KeyState::fromIO(down);
-    result.left = KeyState::fromIO(left);
-    result.right= KeyState::fromIO(right);
-
-    result.primary_action = KeyState::fromIO(primary_action);
-    result.secondary_action = KeyState::fromIO(secondary_action);
-
-    result.unknown2 = KeyState::fromIO(unknown2);
-    result.self_destruct= KeyState::fromIO(self_destruct);
-    result.replay_fuel = KeyState::fromIO(replay_time);
-    result.replay_time = KeyState::fromIO(replay_fuel);
-
-    result.start = KeyState::fromIO(start);
+    result.up.fromIO(up);
+    result.down.fromIO(down);
+    result.left.fromIO(left);
+    result.right.fromIO(right);
+    result.primary_action.fromIO(primary_action);
+    result.secondary_action.fromIO(secondary_action);
+    result.unknown2.fromIO(unknown2);
+    result.self_destruct.fromIO(self_destruct);
+    result.replay_fuel.fromIO(replay_fuel);
+    result.replay_time.fromIO(replay_time);
+    result.start.fromIO(start);
 
     return result;
 }
@@ -115,20 +112,20 @@ void PlayerControlsState::writeToFile(FILE *f)
     start.writeToFile(f);
 }
 
-bool PlayerControlsState::readFromFile(FILE *f, PlayerControlsState& result)
+bool PlayerControlsState::readFromFile(FILE *f)
 {
-    if(!KeyState::readFromFile(f, result.up))
+    if(!up.readFromFile(f))
         return false;
-    KeyState::readFromFile(f, result.down);
-    KeyState::readFromFile(f, result.left);
-    KeyState::readFromFile(f, result.right);
-    KeyState::readFromFile(f, result.primary_action);
-    KeyState::readFromFile(f, result.secondary_action);
-    KeyState::readFromFile(f, result.unknown2);
-    KeyState::readFromFile(f, result.self_destruct);
-    KeyState::readFromFile(f, result.replay_fuel);
-    KeyState::readFromFile(f, result.replay_time);
-    KeyState::readFromFile(f, result.start);
+    down.readFromFile(f);
+    left.readFromFile(f);
+    right.readFromFile(f);
+    primary_action.readFromFile(f);
+    secondary_action.readFromFile(f);
+    unknown2.readFromFile(f);
+    self_destruct.readFromFile(f);
+    replay_fuel.readFromFile(f);
+    replay_time.readFromFile(f);
+    start.readFromFile(f);
 
     return true;
 }
@@ -139,11 +136,11 @@ void ControlsState::writeToFile(FILE *f)
     players[1].writeToFile(f);
 }
 
-bool ControlsState::readFromFile(FILE *f, ControlsState& result)
+bool ControlsState::readFromFile(FILE *f)
 {
-    if(!PlayerControlsState::readFromFile(f, result.players[0]))
+    if(!players[0].readFromFile(f))
         return false;
-    PlayerControlsState::readFromFile(f, result.players[1]);
+    players[1].readFromFile(f);
 
     return true;
 }
