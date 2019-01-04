@@ -1,10 +1,9 @@
-#include <cstdio>
-
 #include "levelSelect.h"
 #include "main.h"
 #include "lineNodeBuilder.h"
 #include "levelScene.h"
 
+#include <sp2/random.h>
 #include <sp2/scene/camera.h>
 #include <sp2/engine.h>
 #include <sp2/tween.h>
@@ -92,6 +91,7 @@ LevelSelect::LevelSelect()
     for(int n=0; sp::io::ResourceProvider::get("levels/level" + sp::string(n+1) + ".json") != nullptr; n++)
     {
         sp::P<LevelNode> next = new LevelNode(getRoot(), "level" + sp::string(n+1), sp::string(n + 1));
+        all_levels.add(next);
         next->setPosition(sp::Vector2d(n * 30, (n % 2) * -10));
         if (prev)
         {
@@ -110,6 +110,7 @@ LevelSelect::LevelSelect()
         for(char c='b'; sp::io::ResourceProvider::get("levels/level" + sp::string(n+1) + sp::string(c) + ".json") != nullptr; c++)
         {
             sp::P<LevelNode> sub = new LevelNode(getRoot(), "level" + sp::string(n+1) + sp::string(c), sp::string(n + 1) + sp::string(c));
+            all_levels.add(sub);
             sub->setPosition(prev->getPosition2D() + sp::Vector2d(10, -30));
             new LevelNodeLink(prev, sub);
             prev = sub;
@@ -142,6 +143,8 @@ void LevelSelect::onFixedUpdate()
     sp::P<sp::Node> old_selection = selection;
     for(int n=0; n<2; n++)
     {
+        if (controls[n].left.get() || controls[n].right.get() || controls[n].up.get() || controls[n].down.get())
+            auto_replay_countdown = auto_replay_delay;
         if (controls[n].right.getDown() && selection->right) selection = selection->right;
         if (controls[n].left.getDown() && selection->left) selection = selection->left;
         if (controls[n].up.getDown() && selection->up) selection = selection->up;
@@ -152,27 +155,17 @@ void LevelSelect::onFixedUpdate()
             sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
             level_scene->loadLevel(selection->level_name);
             level_scene->enable();
-            gui->hide();
             disable();
         }
 
         if (controls[n].replay_fuel.getDown() || controls[n].replay_time.getDown())
         {
-            sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
-            std::string replay_file = controls[n].replay_fuel.getDown() ? (selection->level_name + "-fuel.replay") :
-                    (selection->level_name + "-time.replay");
-
-            FILE* f_existance_test = fopen(replay_file.c_str(), "r");
-            if(f_existance_test)
-            {
-                fclose(f_existance_test);
-                level_scene->loadLevel(selection->level_name, true, replay_file);
-                level_scene->enable();
-                gui->hide();
-                disable();
-            }
-
-
+            sp::string replay_file;
+            if (controls[n].replay_fuel.getDown())
+                replay_file = selection->level_name + "-fuel.replay";
+            else
+                replay_file = selection->level_name + "-time.replay";
+            startReplay(replay_file);
         }
     }
     if (old_selection != selection)
@@ -183,12 +176,69 @@ void LevelSelect::onFixedUpdate()
     if (escape_key.getDown())
         sp::Engine::getInstance()->shutdown();
     
+    if (auto_replay_countdown > 0)
+    {
+        auto_replay_countdown--;
+    }
+    else
+    {
+        startRandomReplay();
+    }
+
     camera->setPosition(camera->getPosition2D() * 0.8 + selection->getPosition2D() * 0.2);
+}
+
+void LevelSelect::onEnable()
+{
+    updateTrophys();
+    gui->show();
+    auto_replay_countdown = auto_replay_delay;
+}
+
+void LevelSelect::onDisable()
+{
+    gui->hide();
+}
+
+void LevelSelect::startRandomReplay()
+{
+    int index = sp::irandom(0, all_levels.size() - 1);
+    for (LevelNode* level : all_levels)
+    {
+        if (index > 0)
+        {
+            index--;
+        }
+        else
+        {
+            sp::string replay_file;
+            if (sp::random(0, 100) < 50)
+                replay_file = level->level_name + "-fuel.replay";
+            else
+                replay_file = level->level_name + "-time.replay";
+            startReplay(replay_file);
+            return;
+        }
+    }
+}
+
+bool LevelSelect::startReplay(sp::string filename)
+{
+    LOG(Debug, filename);
+    FILE* f_existance_test = fopen(filename.c_str(), "r");
+    if (!f_existance_test)
+        return false;
+    fclose(f_existance_test);
+
+    sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
+    level_scene->loadLevel(selection->level_name, true, filename);
+    level_scene->enable();
+    disable();
+    return true;
 }
 
 void LevelSelect::updateTrophys()
 {
-    gui->show();
     gui->getWidgetWithID("FUEL")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.fuel.png") != nullptr);
     gui->getWidgetWithID("FUEL")->getWidgetWithID("PHOTO")->setAttribute("texture", selection->level_name + ".trophy.fuel.png");
     gui->getWidgetWithID("TIME")->setVisible(sp::io::ResourceProvider::get(selection->level_name + ".trophy.time.png") != nullptr);

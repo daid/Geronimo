@@ -24,7 +24,6 @@ LevelScene::LevelScene()
 : sp::Scene("LEVEL")
 {
     gui = sp::gui::Loader::load("gui/hud.gui", "HUD");
-    gui->hide();
     gui->getWidgetWithID("CAMERA_PREVIEW")->setRotation(-90);
     disable();
     
@@ -53,7 +52,6 @@ void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file
     for(auto obj : getRoot()->getChildren())
         delete obj;
 
-    gui->show();
     gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
     gui->getWidgetWithID("CAMERA_PREVIEW")->hide();
 
@@ -254,6 +252,8 @@ void LevelScene::onUpdate(float delta)
     if (level_already_finished)
         return;
 
+    gui->getWidgetWithID("REPLAY_LABEL")->setVisible(replay);
+
     switch (level_info.trophy_mode)
     {
     case LevelInfo::TrophyMode::Normal: {
@@ -279,6 +279,16 @@ void LevelScene::onUpdate(float delta)
         gui->getWidgetWithID("DEPTH")->getWidgetWithID("FAILED")->setVisible(depth < level_info.depth_trophy);
         }break;
     }
+}
+
+void LevelScene::onEnable()
+{
+    gui->show();
+}
+
+void LevelScene::onDisable()
+{
+    gui->hide();
 }
 
 bool LevelScene::inTargetArea(sp::Vector2d position)
@@ -433,7 +443,6 @@ void LevelScene::earnTrophyB(int flags)
 void LevelScene::exitLevel()
 {
     disable();
-    gui->hide();
     camera_capture_texture->close();
     sp::Scene::get("LEVEL_SELECT")->enable();
 }

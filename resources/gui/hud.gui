@@ -29,6 +29,14 @@
         margin: -30, -30
         visible: false
     }
+
+    [REPLAY_LABEL] {
+        type: label
+        alignment: bottom
+        size: 0, 30
+        text.size: 5
+        caption: REPLAY
+    }
 }
 
 [@RECORD_BAR] {
