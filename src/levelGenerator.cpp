@@ -55,14 +55,6 @@ void LevelGenerator::onFixedUpdate()
     const float despawn_range = 300;
     sp::Vector2f camera_position = sp::Vector2f(getScene()->getCamera()->getPosition2D());
 
-    if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
-    {
-        for(auto player : players)
-        {
-            player->setControlState(controls[player->index].playerControlStateFromIO());
-        }
-    }
-
     if ((entry_points[map_index_max] - camera_position).length() < spawn_range)
     {
         LOG(Debug, "Growing level at back!");

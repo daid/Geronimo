@@ -52,10 +52,9 @@ Controls::Controls(int index)
     }
 }
 
-KeyState KeyState::fromIO(const sp::io::Keybinding& key)
+KeyState::KeyState(const sp::io::Keybinding& key)
+: pressed(key.get()), down(key.getDown()), up(key.getUp()), value(key.getValue())
 {
-    KeyState result = KeyState(key.get(), key.getDown(), key.getUp(), key.getValue());
-    return result;
 }
 
 void KeyState::writeToFile(FILE *f)
@@ -78,22 +77,22 @@ bool KeyState::readFromFile(FILE *f)
     return read_n == 2;
 }
 
-PlayerControlsState Controls::playerControlStateFromIO()
+PlayerControlsState Controls::playerControlStateFromKeybindings()
 {
     PlayerControlsState result = PlayerControlsState();
 
-    result.up.fromIO(up);
-    result.down.fromIO(down);
-    result.left.fromIO(left);
-    result.right.fromIO(right);
-    result.primary_action.fromIO(primary_action);
-    result.secondary_action.fromIO(secondary_action);
-    result.unknown2.fromIO(unknown2);
-    result.self_destruct.fromIO(self_destruct);
-    result.replay_fuel.fromIO(replay_fuel);
-    result.replay_time.fromIO(replay_time);
-    result.start.fromIO(start);
-
+    result.up = KeyState(up);
+    result.down = KeyState(down);
+    result.left = KeyState(left);
+    result.right = KeyState(right);
+    result.primary_action = KeyState(primary_action);
+    result.secondary_action = KeyState(secondary_action);
+    result.unknown2 = KeyState(unknown2);
+    result.self_destruct = KeyState(self_destruct);
+    result.replay_fuel = KeyState(replay_fuel);
+    result.replay_time = KeyState(replay_time);
+    result.start = KeyState(start);
+    
     return result;
 }
 

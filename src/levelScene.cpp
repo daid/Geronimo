@@ -96,31 +96,28 @@ void LevelScene::onFixedUpdate()
 {
     level_info.time_ticks += 1;
 
-    ControlsState controlsState;
+    ControlsState controls_state;
 
     if(!replay)
     {
-        if (fixed_frame_count > 0)  // Work around the fact that the first frame all buttons seem pressed
+        for(auto player : players)
         {
-            for(auto player : players)
-            {
-                controlsState.players[player->index] = controls[player->index].playerControlStateFromIO();
-            }
+            controls_state.players[player->index] = controls[player->index].playerControlStateFromKeybindings();
         }
 
         // Make sure we don't record forever
         if (replay_controls_buffer.size() < sp::Engine::fixed_update_frequency*max_replay_time_sec)
         {
             //record controls state for this frame
-            replay_controls_buffer.push_back(controlsState);
+            replay_controls_buffer.push_back(controls_state);
         }
     }
     else
     {
-        if(fixed_frame_count < replay_controls_buffer.size())
+        if(fixed_frame_count < int(replay_controls_buffer.size()))
         {
             //take the control state from the current frame
-            controlsState = replay_controls_buffer[fixed_frame_count];
+            controls_state = replay_controls_buffer[fixed_frame_count];
         }
 
         //Abort playback by user request
@@ -142,7 +139,7 @@ void LevelScene::onFixedUpdate()
     bool in_target = true;
     for(auto player : players)
     {
-        player->setControlState(controlsState.players[player->index]);
+        player->setControlState(controls_state.players[player->index]);
 
         sp::Vector2d position = player->getPosition2D();
         view_position += position;

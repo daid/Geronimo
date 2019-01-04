@@ -9,6 +9,7 @@ class KeyState
 public:
     KeyState(bool pressed, bool down, bool up, float value) : pressed(pressed), down(down), up(up), value(value) {}
     KeyState() : pressed(false), down(false), up(false), value(0) {}
+    KeyState(const sp::io::Keybinding& key);
 
     bool pressed;       //True when this key is currently being pressed.
     bool down;          //True for 1 update cycle when the key is pressed.
@@ -17,8 +18,6 @@ public:
 
     void writeToFile(FILE* f);
     bool readFromFile(FILE* f);
-
-    KeyState fromIO(const sp::io::Keybinding& key);
 };
 
 class PlayerControlsState
@@ -52,7 +51,7 @@ class Controls
 {
 public:
     Controls(int index);
-    PlayerControlsState playerControlStateFromIO();
+    PlayerControlsState playerControlStateFromKeybindings();
 
     int index;
     
