@@ -160,12 +160,10 @@ void LevelSelect::onFixedUpdate()
 
         if (controls[n].replay_fuel.getDown() || controls[n].replay_time.getDown())
         {
-            sp::string replay_file;
             if (controls[n].replay_fuel.getDown())
-                replay_file = selection->level_name + "-fuel.replay";
+                startReplay(selection->level_name, "fuel");
             else
-                replay_file = selection->level_name + "-time.replay";
-            startReplay(replay_file);
+                startReplay(selection->level_name, "time");
         }
     }
     if (old_selection != selection)
@@ -213,25 +211,25 @@ void LevelSelect::startRandomReplay()
         {
             sp::string replay_file;
             if (sp::random(0, 100) < 50)
-                replay_file = level->level_name + "-fuel.replay";
+                startReplay(level->level_name, "fuel");
             else
-                replay_file = level->level_name + "-time.replay";
-            startReplay(replay_file);
+                startReplay(level->level_name, "time");
             return;
         }
     }
 }
 
-bool LevelSelect::startReplay(sp::string filename)
+bool LevelSelect::startReplay(sp::string level_name, sp::string type)
 {
-    LOG(Debug, filename);
-    FILE* f_existance_test = fopen(filename.c_str(), "r");
+    sp::string replay_file = level_name + "-" + type + ".replay";
+
+    FILE* f_existance_test = fopen(replay_file.c_str(), "r");
     if (!f_existance_test)
         return false;
     fclose(f_existance_test);
 
     sp::P<LevelScene> level_scene = sp::Scene::get("LEVEL");
-    level_scene->loadLevel(selection->level_name, true, filename);
+    level_scene->loadLevel(level_name, true, replay_file);
     level_scene->enable();
     disable();
     return true;

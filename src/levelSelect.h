@@ -19,7 +19,7 @@ public:
     void updateTrophys();
 private:
     void startRandomReplay();
-    bool startReplay(sp::string filename);
+    bool startReplay(sp::string level_name, sp::string type);
 
     static constexpr int auto_replay_delay = 30 * sp::Engine::fixed_update_frequency;
 
