@@ -117,6 +117,14 @@ void LevelScene::onFixedUpdate()
             //take the control state from the current frame
             controls_state = replay_controls_buffer[fixed_frame_count];
         }
+        else
+        {
+            //Replay should be over, if we get here, we most likely have a replay consistency issue.
+            for(auto p : players)
+            {
+                p->explode();
+            }
+        }
 
         //Abort playback by user request
         for(auto player : players)
