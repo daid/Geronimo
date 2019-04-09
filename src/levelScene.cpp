@@ -60,6 +60,11 @@ void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file
         new LevelGenerator(getRoot());
         level_info.trophy_mode = LevelInfo::TrophyMode::Depth;
     }
+    else if (name == "Q")
+    {
+        sp::Engine::getInstance()->shutdown();
+        return;
+    }
     else
     {
         ::loadLevel(getRoot(), name);

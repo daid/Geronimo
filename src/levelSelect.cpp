@@ -104,6 +104,10 @@ LevelSelect::LevelSelect()
             sp::P<LevelNode> level_x = new LevelNode(getRoot(), "X", "X");
             level_x->setPosition(sp::Vector2d(-70, -30));
             new LevelNodeLink(level_x, selection);
+
+            sp::P<LevelNode> quit = new LevelNode(getRoot(), "Q", "Q");
+            quit->setPosition(sp::Vector2d(-10, 40));
+            new LevelNodeLink(quit, selection);
         }
 
         prev = next;
