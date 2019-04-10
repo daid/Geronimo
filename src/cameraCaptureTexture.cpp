@@ -30,15 +30,9 @@ void CameraCaptureTexture::bind()
 {
     if (capture)
     {
-        if (capture_delay)
-        {
-            capture_delay--;
-        }
-        else
-        {
-            setImage(capture->getFrame());
-            capture_delay = 2;
-        }
+        sp::Image image(capture->getFrame());
+        if (image.getSize().x > 0)
+            setImage(std::move(image));
     }
     sp::OpenGLTexture::bind();
 }
@@ -46,6 +40,14 @@ void CameraCaptureTexture::bind()
 sp::Image CameraCaptureTexture::getFrame()
 {
     if (capture)
-        return capture->getFrame();
+    {
+        for(int n=0; n<20; n++)
+        {
+            sp::Image image(capture->getFrame());
+            if (image.getSize().x > 0)
+                return image;
+            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        }
+    }
     return sp::Image();
 }

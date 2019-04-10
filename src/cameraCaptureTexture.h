@@ -17,7 +17,6 @@ public:
     sp::Image getFrame();
 private:
     sp::io::CameraCapture* capture;
-    int capture_delay = 0;
 };
 
 #endif//CAMERA_CAPTURE_TEXTURE_H
