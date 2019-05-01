@@ -39,8 +39,6 @@ void GrablingRope::onUpdate(float delta)
     if (!owner || !rope_joint)
         return;
 
-    if (target)
-        setPosition(target->getGlobalPoint2D(target_local_location));
     sp::Vector2d rope_vector = owner->getPosition2D() - getGlobalPosition2D();
     render_data.scale.x = rope_vector.x;
     render_data.scale.y = rope_vector.y;
@@ -53,6 +51,8 @@ void GrablingRope::onFixedUpdate()
         delete this;
         return;
     }
+    if (target)
+        setPosition(target->getGlobalPoint2D(target_local_location));
     sp::Vector2d velocity = getLinearVelocity2D();
     velocity *= 0.99;
     velocity += level_info.getGravityAt(getGlobalPosition2D());
