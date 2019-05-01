@@ -17,8 +17,6 @@ public:
     virtual void setProperty(sp::string name, sp::string value) override;
 protected:
     virtual void onHit(sp::P<sp::Node> object, sp::Vector2d hit_location);
-
-    sp::Vector2d aim_vector;
 private:
     bool active;
     int sparkdelay;

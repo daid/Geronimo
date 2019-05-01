@@ -24,11 +24,10 @@ Laser::Laser(sp::P<sp::Node> parent, sp::string trigger)
     render_data.texture = sp::texture_manager.get("line.png");
     render_data.color = sp::Color(1, 0.5, 0.5);
     
-    spark_emitter = new sp::ParticleEmitter(this);
+    spark_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
 
     active = true;
     sparkdelay = 0;
-    aim_vector = sp::Vector2d(0, 500);
 }
 
 void Laser::onTrigger()
@@ -48,17 +47,17 @@ void Laser::onFixedUpdate()
     if (!active)
         return;
 
-    sp::Vector2d laser_vector = aim_vector;
-    getScene()->queryCollisionAll(sp::Ray2d(getPosition2D() + aim_vector / 5000.0, getPosition2D() + aim_vector), [this, &laser_vector](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
+    sp::Vector2d position = getGlobalPosition2D();
+    double rotation = getGlobalRotation2D();
+    sp::Vector2d laser_vector = sp::Vector2d(0, 500).rotate(rotation);
+    getScene()->queryCollisionAll(sp::Ray2d(position + laser_vector / 5000.0, position + laser_vector), [this, &laser_vector, position](sp::P<sp::Node> object, sp::Vector2d hit_location, sp::Vector2d hit_normal)
     {
         if (!object->isSolid())
             return true;
-        laser_vector = hit_location - getPosition2D();
+        laser_vector = hit_location - position;
         onHit(object, hit_location);
         return false;
     });
-    render_data.scale.x = laser_vector.x;
-    render_data.scale.y = laser_vector.y;
     
     if (sparkdelay > 0)
     {
@@ -81,12 +80,16 @@ void Laser::onFixedUpdate()
         spark_emitter->emit(parameters);
         sparkdelay = 2;
     }
+
+    laser_vector = laser_vector.rotate(-rotation);
+    render_data.scale.x = laser_vector.x;
+    render_data.scale.y = laser_vector.y;
 }
 
 void Laser::setProperty(sp::string name, sp::string value)
 {
     if (name == "angle")
-        aim_vector = sp::Vector2d(0, 500).rotate(sp::stringutil::convert::toFloat(value));
+        setRotation(sp::stringutil::convert::toFloat(value));
     else
         TriggerableNode::setProperty(name, value);
 }
