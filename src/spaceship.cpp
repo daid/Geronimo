@@ -3,6 +3,7 @@
 #include "controls.h"
 #include "levelScene.h"
 #include "grablingRope.h"
+#include "vehicle.h"
 #include "explosion.h"
 
 #include <sp2/random.h>
@@ -36,47 +37,57 @@ void Spaceship::onFixedUpdate()
 
     if (alive)
     {
-        float turn = control_state.left.value  - control_state.right.value;
-        angular_velocity += turn * turn_speed;
-        
-        if (control_state.primary_action.pressed)
+        if (controlling_vehicle)
         {
-            activity = true;
-            sp::Vector2d trust_vector = sp::Vector2d(0, trust_speed).rotate(getRotation2D());
-            velocity += trust_vector;
-            
-            sp::Vector2f particle_vector = sp::Vector2f(sp::random(-0.2, 0.2), 1).rotate(getRotation2D()) * sp::random(0.9, 1.1);
-            sp::ParticleEmitter::Parameters parameters;
-            parameters.position.x = -particle_vector.x;
-            parameters.position.y = -particle_vector.y;
-            parameters.velocity.x = velocity.x + particle_vector.x * -30;
-            parameters.velocity.y = velocity.y + particle_vector.y * -30;
-            parameters.acceleration = -parameters.velocity;
-            //parameters.start_color = sp::Color(1, 1, 0);
-            //parameters.end_color = sp::Color(1, 0, 0, 0);
-            parameters.start_color = render_data.color;
-            parameters.end_color = parameters.start_color;
-            parameters.end_color.a = 0;
-
-            parameters.start_size = 1.0;
-            parameters.end_size = 4.0;
-            parameters.lifetime = 0.3;
-            engine_emitter->emit(parameters);
-
-            level_info.fuel_ticks_used += 1;
-        }
-
-        if (control_state.secondary_action.down)
-        {
-            if (!rope)
-            {
-                rope = new GrablingRope(this);
-                rope->setPosition(getPosition2D() + sp::Vector2d(0, -1).rotate(getRotation2D()));
-                rope->setLinearVelocity(getLinearVelocity2D() + sp::Vector2d(0, -5).rotate(getRotation2D()));
-            }
+            if (control_state.secondary_action.down)
+                controlling_vehicle = nullptr;
             else
+                controlling_vehicle->setControlState(control_state);
+        }
+        else
+        {
+            float turn = control_state.left.value  - control_state.right.value;
+            angular_velocity += turn * turn_speed;
+            
+            if (control_state.primary_action.pressed)
             {
-                rope.destroy();
+                activity = true;
+                sp::Vector2d trust_vector = sp::Vector2d(0, trust_speed).rotate(getRotation2D());
+                velocity += trust_vector;
+                
+                sp::Vector2f particle_vector = sp::Vector2f(sp::random(-0.2, 0.2), 1).rotate(getRotation2D()) * sp::random(0.9, 1.1);
+                sp::ParticleEmitter::Parameters parameters;
+                parameters.position.x = -particle_vector.x;
+                parameters.position.y = -particle_vector.y;
+                parameters.velocity.x = velocity.x + particle_vector.x * -30;
+                parameters.velocity.y = velocity.y + particle_vector.y * -30;
+                parameters.acceleration = -parameters.velocity;
+                //parameters.start_color = sp::Color(1, 1, 0);
+                //parameters.end_color = sp::Color(1, 0, 0, 0);
+                parameters.start_color = render_data.color;
+                parameters.end_color = parameters.start_color;
+                parameters.end_color.a = 0;
+
+                parameters.start_size = 1.0;
+                parameters.end_size = 4.0;
+                parameters.lifetime = 0.3;
+                engine_emitter->emit(parameters);
+
+                level_info.fuel_ticks_used += 1;
+            }
+
+            if (control_state.secondary_action.down)
+            {
+                if (!rope)
+                {
+                    rope = new GrablingRope(this);
+                    rope->setPosition(getPosition2D() + sp::Vector2d(0, -1).rotate(getRotation2D()));
+                    rope->setLinearVelocity(getLinearVelocity2D() + sp::Vector2d(0, -5).rotate(getRotation2D()));
+                }
+                else
+                {
+                    rope.destroy();
+                }
             }
         }
         if (control_state.self_destruct.down)

@@ -6,6 +6,7 @@
 #include "controls.h"
 
 class GrablingRope;
+class Vehicle;
 class Spaceship : public LevelObject
 {
 public:
@@ -36,7 +37,7 @@ private:
     bool alive = true;
     bool activity = false;
     sp::P<GrablingRope> rope;
-
+    sp::P<Vehicle> controlling_vehicle;
 };
 
 

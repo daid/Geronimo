@@ -10,7 +10,8 @@
 #include "bomb.h"
 #include "trigger.h"
 #include "timer.h"
-#include "levelLoader.h"
+#include "wheel.h"
+#include "vehicle.h"
 
 #include <json11/json11.hpp>
 #include <sp2/random.h>
@@ -19,8 +20,10 @@
 #include <sp2/graphics/gui/loader.h>
 #include <sp2/io/cameraCapture.h>
 
+
 static sp::P<sp::Node> addIcon(sp::P<sp::Node> root, sp::Vector2d position, sp::string name);
 static sp::P<sp::Node> addDecoration(sp::P<sp::Node> root, sp::Vector2d position, sp::Vector2f size, sp::string name);
+static void constructSubParts(sp::P<sp::Node> parent, sp::string json_file);
 
 void loadLevel(sp::P<sp::Node> root, sp::string name)
 {
@@ -88,11 +91,19 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 {
                     obj = new PhysicsObject(root, object["name"].string_value());
                     obj->setPosition(position);
+                    constructSubParts(obj, object["name"].string_value() + ".json");
+                }
+                else if (object["type"] == "VEHICLE")
+                {
+                    obj = new Vehicle(root, object["name"].string_value());
+                    obj->setPosition(position);
+                    constructSubParts(obj, object["name"].string_value() + ".json");
                 }
                 else if (object["type"] == "BOMB")
                 {
                     obj = new Bomb(root, object["name"].string_value());
                     obj->setPosition(position);
+                    constructSubParts(obj, object["name"].string_value() + ".json");
                 }
                 else if (object["type"] == "DOOR")
                 {
@@ -148,6 +159,52 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
         }
 
         level_info.camera_view_range = sp::Vector2d(std::max(0.0f, offset_x - 60), std::max(0.0f, offset_y - 60));
+    }
+}
+
+void constructSubParts(sp::P<sp::Node> parent, sp::string json_file)
+{
+    std::string err;
+    json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get(json_file)->readAll(), err);
+    
+    float tw = json["tilewidth"].number_value();
+    float th = json["tileheight"].number_value();
+    float offset_x = json["width"].number_value() / 2.0;
+    float offset_y = json["height"].number_value() / 2.0;
+    for(const auto& layer : json["layers"].array_items())
+    {
+        for(const auto& object : layer["objects"].array_items())
+        {
+            float x = object["x"].number_value();
+            float y = -object["y"].number_value();
+            sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
+            
+            sp::P<LevelObject> obj;
+            if (object["type"] == "LASER")
+            {
+                obj = new Laser(parent, object["name"].string_value());
+                obj->setPosition(position);
+            }
+            else if (object["type"] == "PUSHLASER")
+            {
+                obj = new PushLaser(parent, object["name"].string_value());
+                obj->setPosition(position);
+            }
+            else if (object["type"] == "WHEEL")
+            {
+                float radius = sp::stringutil::convert::toFloat(object["name"].string_value());
+                obj = new Wheel(parent, position, radius);
+            }
+            else if (object["type"] != "")
+            {
+                LOG(Warning, "Unknown sub part object type:", object["type"].string_value());
+            }
+            if (obj)
+            {
+                for(const auto& prop : object["properties"].array_items())
+                    obj->setProperty(prop["name"].string_value(), prop["value"].string_value());
+            }
+        }
     }
 }
 
