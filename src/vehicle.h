@@ -15,12 +15,12 @@ public:
     virtual void onFixedUpdate() override;
     
     virtual void setProperty(sp::string name, sp::string value) override;
-    
-    virtual bool isTriggerSource() { return true; }
-    
+
     void addWheel(sp::P<Wheel> wheel) { wheels.add(wheel); }
     
-    void setControlState(PlayerControlsState control_state);
+    void setControlState(const PlayerControlsState& control_state);
+    
+    sp::string name;
 private:
     sp::PList<Wheel> wheels;
 };

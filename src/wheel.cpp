@@ -12,7 +12,8 @@ Wheel::Wheel(sp::P<sp::Node> parent, sp::Vector2d position, float radius)
 {
     setPosition(parent->getPosition2D() + position);
     sp::collision::Circle2D shape(radius);
-    shape.friction = 1.0;
+    shape.friction = 10.0;
+    shape.angular_damping = 1.0;
     setCollisionShape(shape);
     
     LineNodeBuilder builder;

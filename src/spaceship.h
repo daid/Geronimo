@@ -27,6 +27,8 @@ public:
     void setIcon(sp::string name);
     void setIndex(int idx);
     
+    void setControllingVehicle(sp::P<Vehicle> vehicle);
+    
     sp::P<sp::Node> icon;
     int index;
 private:

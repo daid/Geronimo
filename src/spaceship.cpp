@@ -120,7 +120,10 @@ void Spaceship::onUpdate(float delta)
     {
         if (icon->render_data.type != sp::RenderData::Type::None)
         {
-            icon->setPosition(getPosition2D() + sp::Vector2d(0, 6));
+            if (controlling_vehicle)
+                icon->setPosition(controlling_vehicle->getPosition2D() + sp::Vector2d(0, 6));
+            else
+                icon->setPosition(getPosition2D() + sp::Vector2d(0, 6));
             icon->render_data.color.a -= delta * 0.3;
             if (icon->render_data.color.a < 0.0)
                 icon->render_data.type = sp::RenderData::Type::None;
@@ -148,7 +151,12 @@ void Spaceship::setIndex(int idx)
         case 1: render_data.color = sp::Color(1, 0.8, 0.8); break;
         default: render_data.color = sp::Color(1, 1, 1); break;
     }
+}
 
+void Spaceship::setControllingVehicle(sp::P<Vehicle> vehicle)
+{
+    controlling_vehicle = vehicle;
+    setIcon("gamepad" + sp::string(index + 1));
 }
 
 void Spaceship::onCollision(sp::CollisionInfo& info)

@@ -12,6 +12,7 @@
 #include "timer.h"
 #include "wheel.h"
 #include "vehicle.h"
+#include "remoteControl.h"
 
 #include <json11/json11.hpp>
 #include <sp2/random.h>
@@ -135,6 +136,14 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                         target = target.substr(target.find(":") + 1);
                     }
                     obj = new Trigger(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), source, target);
+                }
+                else if (object["type"] == "REMOTE_CONTROL")
+                {
+                    float w = object["width"].number_value();
+                    float h = -object["height"].number_value();
+
+                    sp::string target = object["name"].string_value();
+                    obj = new RemoteControl(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), target);
                 }
                 else if (object["type"] == "TIMER")
                 {
