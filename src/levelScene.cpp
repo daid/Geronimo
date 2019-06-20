@@ -50,7 +50,7 @@ void LevelScene::loadLevel(sp::string name, bool replay, std::string replay_file
     level_info.trophy_mode = LevelInfo::TrophyMode::Normal;
 
     for(auto obj : getRoot()->getChildren())
-        delete obj;
+        obj.destroy();
 
     gui->getWidgetWithID("BIG_ASS_TROPHY")->hide();
     gui->getWidgetWithID("CAMERA_PREVIEW")->hide();

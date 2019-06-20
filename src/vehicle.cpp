@@ -37,7 +37,7 @@ void Vehicle::setControlState(const PlayerControlsState& control_state)
     float move = control_state.left.value - control_state.right.value;
     if (move)
     {
-        for(Wheel* w : wheels)
+        for(sp::P<Wheel> w : wheels)
             w->setAngularVelocity(move * 200.0);
     }
 }

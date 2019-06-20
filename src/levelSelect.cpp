@@ -205,7 +205,7 @@ void LevelSelect::onDisable()
 void LevelSelect::startRandomReplay()
 {
     int index = sp::irandom(0, all_levels.size() - 1);
-    for (LevelNode* level : all_levels)
+    for (sp::P<LevelNode> level : all_levels)
     {
         if (index > 0)
         {

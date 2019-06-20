@@ -41,7 +41,7 @@ void Bomb::onFixedUpdate()
         if (state_timer < 1)
         {
             new Explosion(getParent(), getPosition2D(), getLinearVelocity2D(), sp::Color(1, 0.8, 0.8));
-            for(sp::Node* obj : getParent()->getChildren())
+            for(sp::P<sp::Node> obj : getParent()->getChildren())
             {
                 sp::Vector2d diff = obj->getPosition2D() - getPosition2D();
                 double dist = diff.length();
