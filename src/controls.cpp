@@ -17,16 +17,16 @@ Controls::Controls(int index)
 {
     if (index == 0)
     {
-        up.setKeys("up", "keypad 8");
-        down.setKeys("down", "keypad 2");
-        left.setKeys("left", "keypad 4");
-        right.setKeys("right", "keypad 6");
+        up.setKeys({"up", "keypad 8"});
+        down.setKeys({"down", "keypad 2"});
+        left.setKeys({"left", "keypad 4"});
+        right.setKeys({"right", "keypad 6"});
         
         primary_action.setKey("space");
-        secondary_action.setKey("z");
+        secondary_action.setKeys({"z", "Menu"});
         
         unknown2.setKey("x");
-        self_destruct.setKey("c");
+        self_destruct.setKeys({"c", "AC Back"}); //"AC Back" is the back key in android
         replay_time.setKey("v");
         replay_fuel.setKey("b");
         
@@ -86,6 +86,10 @@ PlayerControlsState Controls::playerControlStateFromKeybindings()
     result.left = KeyState(left);
     result.right = KeyState(right);
     result.primary_action = KeyState(primary_action);
+#ifdef ANDROID
+    if (result.left.pressed && result.right.pressed)
+        result.primary_action.pressed = true;
+#endif
     result.secondary_action = KeyState(secondary_action);
     result.unknown2 = KeyState(unknown2);
     result.self_destruct = KeyState(self_destruct);

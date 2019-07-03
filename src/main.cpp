@@ -4,6 +4,7 @@
 #include <sp2/assert.h>
 #include <sp2/random.h>
 #include <sp2/io/directoryResourceProvider.h>
+#include <sp2/io/virtualTouchKeys.h>
 #include <sp2/graphics/gui/widget/button.h>
 #include <sp2/graphics/gui/scene.h>
 #include <sp2/graphics/gui/theme.h>
@@ -55,6 +56,13 @@ int main(int argc, char** argv)
     scene_layer->addRenderPass(new sp::CollisionRenderPass());
 #endif
     window->addLayer(scene_layer);
+
+#ifdef ANDROID
+    sp::io::VirtualTouchKeyLayer* touch_layer = new sp::io::VirtualTouchKeyLayer(50);
+    touch_layer->addButton(sp::Rect2f(sp::Vector2f(0, 0), sp::Vector2f(0.5, 1.0)), controls[0].left);
+    touch_layer->addButton(sp::Rect2f(sp::Vector2f(0.5, 0), sp::Vector2f(0.5, 1)), controls[0].right);
+    window->addLayer(touch_layer);
+#endif
 
     new LevelScene();
     new LevelSelect();
