@@ -364,6 +364,8 @@ void LevelScene::loadReplay(std::string filepath)
     replay_controls_buffer.clear();
 
     FILE* replay_fh = fopen(filepath.c_str(), "r");
+    if (!replay_fh)
+        return;
     ControlsState frame;
     while(frame.readFromFile(replay_fh))
     {
@@ -376,6 +378,8 @@ void LevelScene::loadReplay(std::string filepath)
 void LevelScene::saveReplay(std::string filepath)
 {
     FILE* replay_fh = fopen(filepath.c_str(), "w");
+    if (!replay_fh)
+        return;
     for(auto frame : replay_controls_buffer)
     {
         frame.writeToFile(replay_fh);
@@ -390,17 +394,20 @@ void LevelScene::earnTrophyA(int flags)
     camera_capture_texture->open(0);
 
     FILE* f = fopen((level_name + ".trophy").c_str(), "wb");
-    switch (level_info.trophy_mode)
+    if (f)
     {
-    case LevelInfo::TrophyMode::Normal:
-        fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
-        fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
-        break;
-    case LevelInfo::TrophyMode::Depth:
-        fwrite(&level_info.depth_trophy, sizeof(level_info.depth_trophy), 1, f);
-        break;
+        switch (level_info.trophy_mode)
+        {
+        case LevelInfo::TrophyMode::Normal:
+            fwrite(&level_info.fuel_trophy, sizeof(level_info.fuel_trophy), 1, f);
+            fwrite(&level_info.time_trophy, sizeof(level_info.time_trophy), 1, f);
+            break;
+        case LevelInfo::TrophyMode::Depth:
+            fwrite(&level_info.depth_trophy, sizeof(level_info.depth_trophy), 1, f);
+            break;
+        }
+        fclose(f);
     }
-    fclose(f);
     
     gui->getWidgetWithID("BIG_ASS_TROPHY")->show();
     gui->getWidgetWithID("CAMERA_PREVIEW")->show();
