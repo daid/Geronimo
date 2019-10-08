@@ -337,8 +337,8 @@ class Int128
 
     Int128 operator/ (const Int128 &rhs) const
     {
-      if (rhs.lo == 0 && rhs.hi == 0)
-        throw "Int128 operator/: divide by zero";
+      //if (rhs.lo == 0 && rhs.hi == 0)
+      //  throw "Int128 operator/: divide by zero";
 
       bool negate = (rhs.hi < 0) != (hi < 0);
       Int128 dividend = *this;
@@ -939,7 +939,7 @@ bool Pt2IsBetweenPt1AndPt3(const IntPoint pt1,
 
 OutPt* InsertPolyPtBetween(OutPt* p1, OutPt* p2, const IntPoint Pt)
 {
-  if (p1 == p2) throw "JoinError";
+  //if (p1 == p2) throw "JoinError";
   OutPt* result = new OutPt;
   result->Pt = Pt;
   if (p2 == p1->Next)
@@ -995,8 +995,8 @@ void RangeTest(const IntPoint& Pt, bool& useFullRange)
 {
   if (useFullRange)
   {
-    if (Pt.X > hiRange || Pt.Y > hiRange || -Pt.X > hiRange || -Pt.Y > hiRange) 
-      throw "Coordinate outside allowed range";
+    //if (Pt.X > hiRange || Pt.Y > hiRange || -Pt.X > hiRange || -Pt.Y > hiRange) 
+    //  throw "Coordinate outside allowed range";
   }
   else if (Pt.X > loRange|| Pt.Y > loRange || -Pt.X > loRange || -Pt.Y > loRange) 
   {
@@ -1138,11 +1138,11 @@ TEdge* ClipperBase::ProcessBound(TEdge* E, bool IsClockwise)
 bool ClipperBase::AddPath(const Path &pg, PolyType PolyTyp, bool Closed)
 {
 #ifdef use_lines
-  if (!Closed && PolyTyp == ptClip)
-    throw clipperException("AddPath: Open paths must be subject.");
+  //if (!Closed && PolyTyp == ptClip)
+  //  throw clipperException("AddPath: Open paths must be subject.");
 #else
-  if (!Closed)
-    throw clipperException("AddPath: Open paths have been disabled.");
+  //if (!Closed)
+  //  throw clipperException("AddPath: Open paths have been disabled.");
 #endif
 
   int highI = (int)pg.size() -1;
@@ -1155,7 +1155,7 @@ bool ClipperBase::AddPath(const Path &pg, PolyType PolyTyp, bool Closed)
 
   bool IsFlat = true;
   //1. Basic (first) edge initialization ...
-  try
+  //try
   {
     edges[1].Curr = pg[1];
     RangeTest(pg[0], m_UseFullRange);
@@ -1168,11 +1168,11 @@ bool ClipperBase::AddPath(const Path &pg, PolyType PolyTyp, bool Closed)
       InitEdge(&edges[i], &edges[i+1], &edges[i-1], pg[i]);
     }
   }
-  catch(...)
-  {
-    delete [] edges;
-    throw; //range test fails
-  }
+  //catch(...)
+  //{
+  //  delete [] edges;
+  //  throw; //range test fails
+  //}
   TEdge *eStart = &edges[0];
 
   //2. Remove duplicate vertices, and (when closed) collinear edges ...
@@ -1497,8 +1497,8 @@ bool Clipper::Execute(ClipType clipType, Paths &solution,
     PolyFillType subjFillType, PolyFillType clipFillType)
 {
   if( m_ExecuteLocked ) return false;
-  if (m_HasOpenPaths)
-    throw clipperException("Error: PolyTree struct is need for open path clipping.");
+  //if (m_HasOpenPaths)
+  //  throw clipperException("Error: PolyTree struct is need for open path clipping.");
   m_ExecuteLocked = true;
   solution.resize(0);
   m_SubjFillType = subjFillType;
@@ -1548,7 +1548,8 @@ void Clipper::FixHoleLinkage(OutRec &outrec)
 bool Clipper::ExecuteInternal()
 {
   bool succeeded = true;
-  try {
+  //try
+  {
     Reset();
     if (!m_CurrentLM) return false;
     cInt botY = PopScanbeam();
@@ -1564,10 +1565,10 @@ bool Clipper::ExecuteInternal()
       botY = topY;
     } while (!m_Scanbeam.empty() || m_CurrentLM);
   }
-  catch(...) 
-  {
-    succeeded = false;
-  }
+  //catch(...) 
+  //{
+  //  succeeded = false;
+  //}
 
   if (succeeded)
   {
@@ -2168,10 +2169,10 @@ void Clipper::IntersectEdges(TEdge *e1, TEdge *e2,
 
     if (e1stops)
       if (e1->OutIdx < 0) DeleteFromAEL(e1);
-      else throw clipperException("Error intersecting polylines");
+      //else throw clipperException("Error intersecting polylines");
     if (e2stops) 
       if (e2->OutIdx < 0) DeleteFromAEL(e2);
-      else throw clipperException("Error intersecting polylines");
+      //else throw clipperException("Error intersecting polylines");
     return;
   }
 #endif
@@ -2784,7 +2785,7 @@ void Clipper::ProcessHorizontal(TEdge *horzEdge, bool isTopOfScanbeam)
             IntersectEdges(horzEdge, e, e->Top);
           else
             IntersectEdges(e, horzEdge, e->Top);
-          if (eMaxPair->OutIdx >= 0) throw clipperException("ProcessHorizontal error");
+          //if (eMaxPair->OutIdx >= 0) throw clipperException("ProcessHorizontal error");
           return;
         }
         else if(dir == dLeftToRight)
@@ -2854,8 +2855,8 @@ void Clipper::ProcessHorizontal(TEdge *horzEdge, bool isTopOfScanbeam)
         IntersectEdges(horzEdge, eMaxPair, horzEdge->Top); 
       else
         IntersectEdges(eMaxPair, horzEdge, horzEdge->Top);
-      if (eMaxPair->OutIdx >= 0)
-        throw clipperException("ProcessHorizontal error");
+      //if (eMaxPair->OutIdx >= 0)
+        //throw clipperException("ProcessHorizontal error");
     } else
     {
       DeleteFromAEL(horzEdge);
@@ -2871,8 +2872,8 @@ void Clipper::ProcessHorizontal(TEdge *horzEdge, bool isTopOfScanbeam)
 
 void Clipper::UpdateEdgeIntoAEL(TEdge *&e)
 {
-  if( !e->NextInLML ) throw
-    clipperException("UpdateEdgeIntoAEL: invalid call");
+  //if( !e->NextInLML ) throw
+  //  clipperException("UpdateEdgeIntoAEL: invalid call");
 
   e->NextInLML->OutIdx = e->OutIdx;
   TEdge* AelPrev = e->PrevInAEL;
@@ -2895,19 +2896,20 @@ void Clipper::UpdateEdgeIntoAEL(TEdge *&e)
 bool Clipper::ProcessIntersections(const cInt botY, const cInt topY)
 {
   if( !m_ActiveEdges ) return true;
-  try {
+  //try
+  {
     BuildIntersectList(botY, topY);
     size_t IlSize = m_IntersectList.size();
     if (IlSize == 0) return true;
     if (IlSize == 1 || FixupIntersectionOrder()) ProcessIntersectList();
     else return false;
   }
-  catch(...) 
-  {
-    m_SortedEdges = 0;
-    DisposeIntersectNodes();
-    throw clipperException("ProcessIntersections error");
-  }
+  //catch(...) 
+  //{
+  //  m_SortedEdges = 0;
+  //  DisposeIntersectNodes();
+  //  throw clipperException("ProcessIntersections error");
+  //}
   m_SortedEdges = 0;
   return true;
 }
@@ -2949,7 +2951,8 @@ void Clipper::BuildIntersectList(const cInt botY, const cInt topY)
       if(e->Curr.X > eNext->Curr.X)
       {
         if (!IntersectPoint(*e, *eNext, Pt, m_UseFullRange) && e->Curr.X > eNext->Curr.X +1)
-          throw clipperException("Intersection error");
+        {  //throw clipperException("Intersection error");
+        }
         if (Pt.Y > botY)
         {
             Pt.Y = botY;
@@ -3076,7 +3079,7 @@ void Clipper::DoMaxima(TEdge *e)
     DeleteFromAEL(eMaxPair);
   } 
 #endif
-  else throw clipperException("DoMaxima error");
+  //else throw clipperException("DoMaxima error");
 }
 //------------------------------------------------------------------------------
 
