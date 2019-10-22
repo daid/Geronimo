@@ -19,6 +19,9 @@ Spaceship::Spaceship(sp::P<sp::Node> parent)
     builder.create(this, LineNodeBuilder::CollisionType::Polygon);
 
     engine_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
+    engine_emitter->addEffector<sp::ParticleEmitter::ColorEffector>(sp::Color(1, 1, 1), sp::Color(1, 1, 1, 0));
+    engine_emitter->addEffector<sp::ParticleEmitter::SizeEffector>(1.0, 4.0);
+    engine_emitter->addEffector<sp::ParticleEmitter::VelocityScaleEffector>(0.0, -10.0);
 }
 
 void Spaceship::setControlState(PlayerControlsState control_state)
@@ -61,15 +64,6 @@ void Spaceship::onFixedUpdate()
                 parameters.position.y = -particle_vector.y;
                 parameters.velocity.x = velocity.x + particle_vector.x * -30;
                 parameters.velocity.y = velocity.y + particle_vector.y * -30;
-                parameters.acceleration = -parameters.velocity;
-                //parameters.start_color = sp::Color(1, 1, 0);
-                //parameters.end_color = sp::Color(1, 0, 0, 0);
-                parameters.start_color = render_data.color;
-                parameters.end_color = parameters.start_color;
-                parameters.end_color.a = 0;
-
-                parameters.start_size = 1.0;
-                parameters.end_size = 4.0;
                 parameters.lifetime = 0.3;
                 engine_emitter->emit(parameters);
 

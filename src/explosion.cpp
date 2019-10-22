@@ -10,6 +10,11 @@ Explosion::Explosion(sp::P<sp::Node> parent, sp::Vector2d position, sp::Vector2d
 {
     setPosition(position);
     auto_destroy = true;
+    
+    addEffector<sp::ParticleEmitter::ColorEffector>(sp::Color(1, 1, 1, 1), sp::Color(1, 1, 1, 0));
+    addEffector<sp::ParticleEmitter::SizeEffector>(5.0f, 10.0f);
+    addEffector<sp::ParticleEmitter::VelocityScaleEffector>(10.0f, 1.0f);
+    addEffector<sp::ParticleEmitter::ConstantAcceleration>(sp::Vector3f(0.0f, -30.0f, 0.0f));
 
     for(int n=0; n<64; n++)
     {
@@ -17,14 +22,7 @@ Explosion::Explosion(sp::P<sp::Node> parent, sp::Vector2d position, sp::Vector2d
         sp::ParticleEmitter::Parameters parameters;
         parameters.velocity.x = velocity.x;
         parameters.velocity.y = velocity.y;
-        parameters.acceleration = parameters.velocity;
-        parameters.acceleration.y += -30.0;
-        parameters.start_color = color;
-        parameters.end_color = color;
-        parameters.end_color.a = 0;
 
-        parameters.start_size = 5.0;
-        parameters.end_size = 10.0;
         parameters.lifetime = sp::Tween<double>::easeInCubic(sp::random(0.0, 1.0), 0.0, 1.0, 0.3, 3.0);
         emit(parameters);
     }

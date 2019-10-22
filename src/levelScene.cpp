@@ -417,20 +417,17 @@ void LevelScene::earnTrophyA(int flags)
         sp::P<sp::ParticleEmitter> pe = new sp::ParticleEmitter(camera, 64, sp::ParticleEmitter::Origin::Local);
         pe->setPosition(sp::Vector2d(sp::random(-60, 60), sp::random(-60, 60)));
         pe->auto_destroy = true;
+        pe->addEffector<sp::ParticleEmitter::SizeEffector>(5.0f, 10.0f);
+        pe->addEffector<sp::ParticleEmitter::VelocityScaleEffector>(10.0f, 1.0f);
+        pe->addEffector<sp::ParticleEmitter::ConstantAcceleration>(sp::Vector3f(0.0f, -100.0f, 0.0f));
         for(int n=0; n<64; n++)
         {
             sp::Vector2f velocity = sp::Vector2f(sp::random(1, 40), 0).rotate(sp::random(0, 360));
             sp::ParticleEmitter::Parameters parameters;
             parameters.velocity.x = velocity.x;
             parameters.velocity.y = velocity.y;
-            parameters.acceleration = parameters.velocity;
-            parameters.acceleration.y += -100.0;
-            parameters.start_color = sp::HsvColor(sp::random(0, 360), 20, 100);
-            parameters.end_color = parameters.start_color;
-            parameters.end_color.a = 0;
+            parameters.color = sp::HsvColor(sp::random(0, 360), 20, 100);
 
-            parameters.start_size = 5.0;
-            parameters.end_size = 10.0;
             parameters.lifetime = sp::Tween<double>::easeInCubic(sp::random(0.0, 1.0), 0.0, 1.0, 0.3, 3.0);
             pe->emit(parameters);
         }

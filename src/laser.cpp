@@ -25,6 +25,8 @@ Laser::Laser(sp::P<sp::Node> parent, sp::string trigger)
     render_data.color = sp::Color(1, 0.5, 0.5);
     
     spark_emitter = new sp::ParticleEmitter(this, 16, sp::ParticleEmitter::Origin::Global);
+    spark_emitter->addEffector<sp::ParticleEmitter::SizeEffector>(3.0, 5.0);
+    spark_emitter->addEffector<sp::ParticleEmitter::VelocityScaleEffector>(0.0, -10.0);
 
     active = true;
     sparkdelay = 0;
@@ -70,12 +72,8 @@ void Laser::onFixedUpdate()
         parameters.position.y = laser_vector.y;
         parameters.velocity.x = sp::random(-7, 7);
         parameters.velocity.y = sp::random(-7, 7);
-        parameters.acceleration = -parameters.velocity;
-        parameters.start_color = render_data.color;
-        parameters.end_color = sp::Color(0, 0, 0, 0);
+        parameters.color = render_data.color;
 
-        parameters.start_size = 3.0;
-        parameters.end_size = 5.0;
         parameters.lifetime = 0.5;
         spark_emitter->emit(parameters);
         sparkdelay = 2;
