@@ -1,6 +1,6 @@
 #include "bomb.h"
 #include "explosion.h"
-
+#include <sp2/stringutil/convert.h>
 
 Bomb::Bomb(sp::P<sp::Node> parent, sp::string name)
 : PhysicsObject(parent, name)
