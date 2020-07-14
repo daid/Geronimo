@@ -420,7 +420,7 @@ void LevelScene::earnTrophyA(int flags)
         pe->addEffector<sp::ParticleEmitter::SizeEffector>(5.0f, 10.0f);
         pe->addEffector<sp::ParticleEmitter::VelocityScaleEffector>(10.0f, 1.0f);
         pe->addEffector<sp::ParticleEmitter::ConstantAcceleration>(sp::Vector3f(0.0f, -100.0f, 0.0f));
-        for(int n=0; n<64; n++)
+        for(int m=0; m<64; m++)
         {
             sp::Vector2f velocity = sp::Vector2f(sp::random(1, 40), 0).rotate(sp::random(0, 360));
             sp::ParticleEmitter::Parameters parameters;
