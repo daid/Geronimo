@@ -5,7 +5,7 @@
 #include <sp2/graphics/meshdata.h>
 #include <sp2/collision/2d/polygon.h>
 #include <sp2/collision/2d/chains.h>
-#include <json11/json11.hpp>
+#include <nlohmann/json.hpp>
 
 
 class LineNodeBuilder
@@ -19,7 +19,7 @@ public:
     };
 
     void loadFrom(sp::string filename, float line_width=1.0, sp::string type="");
-    void addLoop(const json11::Json& base_json, const json11::Json& object_json, float line_width=1.0);
+    void addLoop(const nlohmann::json& base_json, const nlohmann::json& object_json, float line_width=1.0);
     void addLoop(const std::vector<sp::Vector2f>& points, float line_width=1.0);
     void create(sp::P<sp::Node> node, CollisionType collision_type);
 private:

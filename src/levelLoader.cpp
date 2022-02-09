@@ -14,7 +14,7 @@
 #include "vehicle.h"
 #include "remoteControl.h"
 
-#include <json11/json11.hpp>
+#include <nlohmann/json.hpp>
 #include <sp2/random.h>
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>
@@ -46,35 +46,34 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
         node->render_data.color = sp::Color(0.8, 1.0, 0.8);
     }
     {
-        std::string err;
-        json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get("levels/" + name + ".json")->readAll(), err);
+        nlohmann::json json = nlohmann::json::parse(sp::io::ResourceProvider::get("levels/" + name + ".json")->readAll());
 
-        float tw = json["tilewidth"].number_value();
-        float th = json["tileheight"].number_value();
-        float offset_x = json["width"].number_value() / 2.0;
-        float offset_y = json["height"].number_value() / 2.0;
-        for(const auto& layer : json["layers"].array_items())
+        float tw = json["tilewidth"];
+        float th = json["tileheight"];
+        float offset_x = float(json["width"]) / 2.0;
+        float offset_y = float(json["height"]) / 2.0;
+        for(const auto& layer : json["layers"])
         {
-            for(const auto& object : layer["objects"].array_items())
+            for(const auto& object : layer["objects"])
             {
-                float x = object["x"].number_value();
-                float y = -object["y"].number_value();
+                float x = object["x"];
+                float y = -float(object["y"]);
                 sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
                 sp::P<LevelObject> obj;
 
                 if (object["type"] == "ICON")
                 {
-                    addIcon(root, position, object["name"].string_value());
+                    addIcon(root, position, object["name"]);
                 }
                 else if (object["type"] == "DECORATION")
                 {
-                    float width = object["width"].number_value();
-                    float height = object["height"].number_value();
-                    addDecoration(root, position, sp::Vector2f(width, height), object["name"].string_value());
+                    float width = object["width"];
+                    float height = object["height"];
+                    addDecoration(root, position, sp::Vector2f(width, height), object["name"]);
                 }
                 else if (object["type"] == "START")
                 {
-                    int index = sp::stringutil::convert::toInt(object["name"].string_value());
+                    int index = sp::stringutil::convert::toInt(object["name"]);
                     sp::P<Spaceship> spaceship = new Spaceship(root);
                     spaceship->setPosition(position);
                     spaceship->setIndex(index);
@@ -83,52 +82,52 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
                 else if (object["type"] == "TARGET")
                 {
-                    float w = object["width"].number_value();
-                    float h = -object["height"].number_value();
+                    float w = object["width"];
+                    float h = -float(object["height"]);
 
                     level_info.target_areas.emplace_back(position.x, position.y + h / th, w / tw, -h / th);
                 }
                 else if (object["type"] == "OBJECT")
                 {
-                    obj = new PhysicsObject(root, object["name"].string_value());
+                    obj = new PhysicsObject(root, object["name"]);
                     obj->setPosition(position);
-                    constructSubParts(obj, object["name"].string_value() + ".json");
+                    constructSubParts(obj, std::string(object["name"]) + ".json");
                 }
                 else if (object["type"] == "VEHICLE")
                 {
-                    obj = new Vehicle(root, object["name"].string_value());
+                    obj = new Vehicle(root, object["name"]);
                     obj->setPosition(position);
-                    constructSubParts(obj, object["name"].string_value() + ".json");
+                    constructSubParts(obj, std::string(object["name"]) + ".json");
                 }
                 else if (object["type"] == "BOMB")
                 {
-                    obj = new Bomb(root, object["name"].string_value());
+                    obj = new Bomb(root, object["name"]);
                     obj->setPosition(position);
-                    constructSubParts(obj, object["name"].string_value() + ".json");
+                    constructSubParts(obj, std::string(object["name"]) + ".json");
                 }
                 else if (object["type"] == "DOOR")
                 {
-                    obj = new Door(root, object["name"].string_value());
+                    obj = new Door(root, object["name"]);
                     LineNodeBuilder builder;
                     builder.addLoop(json, object, 2.0);
                     builder.create(obj, LineNodeBuilder::CollisionType::Chains);
                 }
                 else if (object["type"] == "LASER")
                 {
-                    obj = new Laser(root, object["name"].string_value());
+                    obj = new Laser(root, object["name"]);
                     obj->setPosition(position);
                 }
                 else if (object["type"] == "PUSHLASER")
                 {
-                    obj = new PushLaser(root, object["name"].string_value());
+                    obj = new PushLaser(root, object["name"]);
                     obj->setPosition(position);
                 }
                 else if (object["type"] == "TRIGGER")
                 {
-                    float w = object["width"].number_value();
-                    float h = -object["height"].number_value();
+                    float w = object["width"];
+                    float h = -float(object["height"]);
 
-                    sp::string target = object["name"].string_value();
+                    sp::string target = object["name"];
                     sp::string source = "";
                     if (target.find(":") > -1)
                     {
@@ -139,15 +138,15 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
                 else if (object["type"] == "REMOTE_CONTROL")
                 {
-                    float w = object["width"].number_value();
-                    float h = -object["height"].number_value();
+                    float w = object["width"];
+                    float h = -float(object["height"]);
 
-                    sp::string target = object["name"].string_value();
+                    sp::string target = object["name"];
                     obj = new RemoteControl(root, sp::Rect2d(position.x, position.y + h / th, w / tw, -h / th), target);
                 }
                 else if (object["type"] == "TIMER")
                 {
-                    sp::string target = object["name"].string_value();
+                    sp::string target = object["name"];
                     obj = new Timer(root, target);
                 }
                 else if (object["type"] == "GRAVITY")
@@ -157,12 +156,12 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
                 else if (object["type"] != "")
                 {
-                    LOG(Warning, "Unknown object type:", object["type"].string_value());
+                    LOG(Warning, "Unknown object type:", object["type"]);
                 }
                 if (obj)
                 {
-                    for(const auto& prop : object["properties"].array_items())
-                        obj->setProperty(prop["name"].string_value(), prop["value"].string_value());
+                    for(const auto& prop : object["properties"])
+                        obj->setProperty(prop["name"], prop["value"]);
                 }
             }
         }
@@ -173,45 +172,44 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
 
 void constructSubParts(sp::P<sp::Node> parent, sp::string json_file)
 {
-    std::string err;
-    json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get(json_file)->readAll(), err);
-    
-    float tw = json["tilewidth"].number_value();
-    float th = json["tileheight"].number_value();
-    float offset_x = json["width"].number_value() / 2.0;
-    float offset_y = json["height"].number_value() / 2.0;
-    for(const auto& layer : json["layers"].array_items())
+    auto json = nlohmann::json::parse(sp::io::ResourceProvider::get(json_file)->readAll());
+
+    float tw = json["tilewidth"];
+    float th = json["tileheight"];
+    float offset_x = float(json["width"]) / 2.0;
+    float offset_y = float(json["height"]) / 2.0;
+    for(const auto& layer : json["layers"])
     {
-        for(const auto& object : layer["objects"].array_items())
+        for(const auto& object : layer["objects"])
         {
-            float x = object["x"].number_value();
-            float y = -object["y"].number_value();
+            float x = object["x"];
+            float y = -float(object["y"]);
             sp::Vector2d position(x / tw - offset_x, y / th + offset_y);
             
             sp::P<LevelObject> obj;
             if (object["type"] == "LASER")
             {
-                obj = new Laser(parent, object["name"].string_value());
+                obj = new Laser(parent, object["name"]);
                 obj->setPosition(position);
             }
             else if (object["type"] == "PUSHLASER")
             {
-                obj = new PushLaser(parent, object["name"].string_value());
+                obj = new PushLaser(parent, object["name"]);
                 obj->setPosition(position);
             }
             else if (object["type"] == "WHEEL")
             {
-                float radius = sp::stringutil::convert::toFloat(object["name"].string_value());
+                float radius = sp::stringutil::convert::toFloat(object["name"]);
                 obj = new Wheel(parent, position, radius);
             }
             else if (object["type"] != "")
             {
-                LOG(Warning, "Unknown sub part object type:", object["type"].string_value());
+                LOG(Warning, "Unknown sub part object type:", object["type"]);
             }
             if (obj)
             {
-                for(const auto& prop : object["properties"].array_items())
-                    obj->setProperty(prop["name"].string_value(), prop["value"].string_value());
+                for(const auto& prop : object["properties"])
+                    obj->setProperty(prop["name"], prop["value"]);
             }
         }
     }

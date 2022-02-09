@@ -15,7 +15,7 @@
 #include <sp2/graphics/textureManager.h>
 #include <sp2/graphics/meshdata.h>
 
-#include <json11/json11.hpp>
+#include <nlohmann/json.hpp>
 
 #include "lineNodeBuilder.h"
 #include "physicsObject.h"

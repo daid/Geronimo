@@ -9,7 +9,7 @@
 #include "levelLoader.h"
 #include "levelGenerator.h"
 
-#include <json11/json11.hpp>
+#include <nlohmann/json.hpp>
 #include <sp2/random.h>
 #include <sp2/tween.h>
 #include <sp2/graphics/textureManager.h>

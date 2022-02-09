@@ -6,41 +6,40 @@
 
 void LineNodeBuilder::loadFrom(sp::string filename, float line_width, sp::string type)
 {
-    std::string err;
-    json11::Json json = json11::Json::parse(sp::io::ResourceProvider::get(filename)->readAll(), err);
+    nlohmann::json json = nlohmann::json::parse(sp::io::ResourceProvider::get(filename)->readAll());
     
-    float tw = json["tilewidth"].number_value();
-    float th = json["tileheight"].number_value();
-    float offset_x = json["width"].number_value() / 2.0;
-    float offset_y = json["height"].number_value() / 2.0;
-    for(const auto& layer : json["layers"].array_items())
+    float tw = json["tilewidth"];
+    float th = json["tileheight"];
+    float offset_x = float(json["width"]) / 2.0;
+    float offset_y = float(json["height"]) / 2.0;
+    for(const auto& layer : json["layers"])
     {
-        for(const auto& object : layer["objects"].array_items())
+        for(const auto& object : layer["objects"])
         {
-            if (sp::string(object["type"].string_value()) != type)
+            if (std::string(object["type"]) != type)
                 continue;
-            float x = object["x"].number_value();
-            float y = -object["y"].number_value();
+            float x = object["x"];
+            float y = -float(object["y"]);
             std::vector<sp::Vector2f> points;
-            for(const auto& point : object["polygon"].array_items())
-                points.emplace_back((x + point["x"].number_value()) / tw - offset_x, (y-point["y"].number_value()) / th + offset_y);
+            for(const auto& point : object["polygon"])
+                points.emplace_back((x + float(point["x"])) / tw - offset_x, (y-float(point["y"])) / th + offset_y);
             if (points.size() > 0)
                 addLoop(points, line_width);
         }
     }
 }
 
-void LineNodeBuilder::addLoop(const json11::Json& base_json, const json11::Json& object_json, float line_width)
+void LineNodeBuilder::addLoop(const nlohmann::json& base_json, const nlohmann::json& object_json, float line_width)
 {
-    float tw = base_json["tilewidth"].number_value();
-    float th = base_json["tileheight"].number_value();
-    float offset_x = base_json["width"].number_value() / 2.0;
-    float offset_y = base_json["height"].number_value() / 2.0;
-    float x = object_json["x"].number_value();
-    float y = -object_json["y"].number_value();
+    float tw = base_json["tilewidth"];
+    float th = base_json["tileheight"];
+    float offset_x = float(base_json["width"]) / 2.0;
+    float offset_y = float(base_json["height"]) / 2.0;
+    float x = object_json["x"];
+    float y = -float(object_json["y"]);
     std::vector<sp::Vector2f> points;
-    for(const auto& point : object_json["polygon"].array_items())
-        points.emplace_back((x + point["x"].number_value()) / tw - offset_x, (y-point["y"].number_value()) / th + offset_y);
+    for(const auto& point : object_json["polygon"])
+        points.emplace_back((x + float(point["x"])) / tw - offset_x, (y-float(point["y"])) / th + offset_y);
     if (points.size() > 0)
         addLoop(points, line_width);
 }
