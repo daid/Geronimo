@@ -160,8 +160,9 @@ void loadLevel(sp::P<sp::Node> root, sp::string name)
                 }
                 if (obj)
                 {
-                    for(const auto& prop : object["properties"])
-                        obj->setProperty(prop["name"], prop["value"]);
+                    if (object.find("properties") != object.end())
+                        for(const auto& prop : object["properties"])
+                            obj->setProperty(prop["name"], prop["value"]);
                 }
             }
         }
