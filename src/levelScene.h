@@ -21,8 +21,8 @@ public:
     
     virtual void onFixedUpdate() override;
     virtual void onUpdate(float delta) override;
-    virtual void onEnable() override;
-    virtual void onDisable() override;
+    virtual void onEnable(uint32_t flags) override;
+    virtual void onDisable(uint32_t flags) override;
     void doCameraShake() { shake = 15; }
     
     bool inTargetArea(sp::Vector2d position);

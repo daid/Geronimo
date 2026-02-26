@@ -294,12 +294,12 @@ void LevelScene::onUpdate(float delta)
     }
 }
 
-void LevelScene::onEnable()
+void LevelScene::onEnable(uint32_t flags)
 {
     gui->show();
 }
 
-void LevelScene::onDisable()
+void LevelScene::onDisable(uint32_t flags)
 {
     gui->hide();
 }

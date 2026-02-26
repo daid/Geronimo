@@ -190,14 +190,14 @@ void LevelSelect::onFixedUpdate()
     camera->setPosition(camera->getPosition2D() * 0.8 + selection->getPosition2D() * 0.2);
 }
 
-void LevelSelect::onEnable()
+void LevelSelect::onEnable(uint32_t flags)
 {
     updateTrophys();
     gui->show();
     auto_replay_countdown = auto_replay_delay;
 }
 
-void LevelSelect::onDisable()
+void LevelSelect::onDisable(uint32_t flags)
 {
     gui->hide();
 }

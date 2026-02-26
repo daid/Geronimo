@@ -13,8 +13,8 @@ public:
     LevelSelect();
     
     virtual void onFixedUpdate() override;
-    virtual void onEnable() override;
-    virtual void onDisable() override;
+    virtual void onEnable(uint32_t flags) override;
+    virtual void onDisable(uint32_t flags) override;
 
     void updateTrophys();
 private:
